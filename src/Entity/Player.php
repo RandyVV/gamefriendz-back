@@ -45,13 +45,21 @@ class Player
     private $discord_tag;
 
     /**
-     * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="players")
+     * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="owners")
+     * @ORM\JoinTable(name="player_owns_gameonplatform")
      */
-    private $gameonplatform;
+    private $owned_games;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="players")
+     * @ORM\JoinTable(name="player_wantstoplay_gameonplatform")
+     */
+    private $wants_to_play;
 
     public function __construct()
     {
-        $this->gameonplatform = new ArrayCollection();
+        $this->owned_games = new ArrayCollection();
+        $this->wants_to_play = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,23 +130,47 @@ class Player
     /**
      * @return Collection<int, GameOnPlatform>
      */
-    public function getGameonplatform(): Collection
+    public function getOwnedGames(): Collection
     {
-        return $this->gameonplatform;
+        return $this->owned_games;
     }
 
-    public function addGameonplatform(GameOnPlatform $gameonplatform): self
+    public function addOwnedGame(GameOnPlatform $ownedGame): self
     {
-        if (!$this->gameonplatform->contains($gameonplatform)) {
-            $this->gameonplatform[] = $gameonplatform;
+        if (!$this->owned_games->contains($ownedGame)) {
+            $this->owned_games[] = $ownedGame;
         }
 
         return $this;
     }
 
-    public function removeGameonplatform(GameOnPlatform $gameonplatform): self
+    public function removeOwnedGame(GameOnPlatform $ownedGame): self
     {
-        $this->gameonplatform->removeElement($gameonplatform);
+        $this->owned_games->removeElement($ownedGame);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameOnPlatform>
+     */
+    public function getWantsToPlay(): Collection
+    {
+        return $this->wants_to_play;
+    }
+
+    public function addWantsToPlay(GameOnPlatform $wantsToPlay): self
+    {
+        if (!$this->wants_to_play->contains($wantsToPlay)) {
+            $this->wants_to_play[] = $wantsToPlay;
+        }
+
+        return $this;
+    }
+
+    public function removeWantsToPlay(GameOnPlatform $wantsToPlay): self
+    {
+        $this->wants_to_play->removeElement($wantsToPlay);
 
         return $this;
     }
