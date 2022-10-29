@@ -34,6 +34,18 @@ class GameOnPlatform
      */
     private $players;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="releases")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $game;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="supportedGames")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $platform;
+
     public function __construct()
     {
         $this->owners = new ArrayCollection();
@@ -107,6 +119,30 @@ class GameOnPlatform
         if ($this->owners->removeElement($owner)) {
             $owner->removeOwnedGame($this);
         }
+
+        return $this;
+    }
+
+    public function getGame(): ?Game
+    {
+        return $this->game;
+    }
+
+    public function setGame(?Game $game): self
+    {
+        $this->game = $game;
+
+        return $this;
+    }
+
+    public function getPlatform(): ?Platform
+    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?Platform $platform): self
+    {
+        $this->platform = $platform;
 
         return $this;
     }
