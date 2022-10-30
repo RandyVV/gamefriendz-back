@@ -19,52 +19,53 @@ App\Entity\Player:
 
 App\Entity\Game:
 
-    game_1:
+    # cet index sera utilisé dans la génération des GameOnPlatform
+    pokemonviolet:
         title: Pokemon Violet
         description: Découvrez Paldea, un vaste monde ouvert inspiré des paysages ibériques, et qui, pour la première fois dans l’histoire Pokémon, est entièrement explorable ! Plongez dans des terres baignées de soleil et regorgeant d’environnements lumineux, où cohabitent de nombreux Pokémon à attraper !
         has_multiplayer_mode: true
 
-    game_2:
+    leagueoflegends:
         title: League of Legends
         description: League of Legends est un jeu vidéo sorti en 2009 de type arène de bataille en ligne, free-to-play, développé et édité par Riot Games sur Windows et Mac OS.
         has_multiplayer_mode: true
 
-    game_3:
+    eldenring:
         title: Elden Ring
         description: Elden Ring est un jeu vidéo d'action-RPG développé par FromSoftware et édité par Bandai Namco Entertainment, issu de la collaboration entre le créateur de jeux vidéo Hidetaka Miyazaki et l'écrivain George R. R. Martin.
         has_multiplayer_mode: true
 
-    game_4:
+    fallguys:
         title: Fall Guys
         description: Fall Guys, anciennement Fall Guys Ultimate Knockout, est un jeu vidéo de type battle royale multijoueur développé par Mediatonic.
         has_multiplayer_mode: true
 
-    game_5:
+    amongus:
         title: Among Us
         description: Among Us est un jeu vidéo d'ambiance multijoueur en ligne développé et édité par le studio InnerSloth.
         has_multiplayer_mode: true
 
-    game_6:
+    genshinimpact:
         title: Genshin Impact
         description: Genshin Impact est un jeu vidéo de type action-RPG développé par miHoYo.
         has_multiplayer_mode: true
 
-    game_7:
+    bayonetta3:
         title: Bayonetta 3
         description: Bayonetta 3 est un jeu vidéo de type beat them all développé par Platinum Games et édité par Nintendo.
         has_multiplayer_mode: false
 
-    game_8:
+    fortnite:
         title: Fortnite
         description: Fortnite est un jeu en ligne développé par Epic Games sous la forme de différents modes de jeu qui partagent le même gameplay général et le même moteur de jeu.
         has_multiplayer_mode: true
 
-    game_9:
+    pokemonunite:
         title: Pokemon Unite
         description: Pokémon Unite est un jeu vidéo d'arène de bataille en ligne multijoueur développé par TiMi Studios et édité par Tencent en partenariat avec The Pokémon Company. Il est le premier jeu de combat stratégique en équipe Pokémon.
         has_multiplayer_mode: true
 
-    game_10:
+    ninokuni:
         title: Ni No Kuni La Vengeance de la sorcière céleste
         description: Ni no kuni est un jeu vidéo de rôle développé par la société japonaise Level-5 et le studio d'animation Ghibli.
         has_multiplayer_mode: false
@@ -92,3 +93,197 @@ App\Entity\Platform:
 
     platform_7:
         name: Xbox Series X
+
+
+App\Entity\GameOnPlatform:
+
+    gameonplatform_1:
+        release_date: <date_create("2022-02-25")>
+        game: "@eldenring"
+        platform: "@platform_1"
+
+    gameonplatform_2:
+        release_date: <date_create("2022-02-25")>
+        game: "@eldenring"
+        platform: "@platform_2"
+
+    gameonplatform_3:
+        release_date: <date_create("2022-02-25")>
+        game: "@eldenring"
+        platform: "@platform_4"
+
+    gameonplatform_4:
+        release_date: <date_create("2022-02-25")>
+        game: "@eldenring"
+        platform: "@platform_6"
+
+    gameonplatform_5:
+        release_date: <date_create("2022-02-25")>
+        game: "@eldenring"
+        platform: "@platform_7"
+
+    gameonplatform_6:
+        release_date: <date_create("2022-11-18")>
+        game: "@pokemonviolet"
+        platform: "@platform_7"
+
+    gameonplatform_7:
+        release_date: <date_create("2009-10-27")>
+        game: "@leagueoflegends"
+        platform: "@platform_4"
+
+    gameonplatform_8:
+        release_date: <date_create("2020-08-04")>
+        game: "@fallguys"
+        platform: "@platform_1"
+
+    gameonplatform_9:
+        release_date: <date_create("2020-08-04")>
+        game: "@fallguys"
+        platform: "@platform_2"
+
+    gameonplatform_10:
+        release_date: <date_create("2022-06-21")>
+        game: "@fallguys"
+        platform: "@platform_3"
+
+    gameonplatform_11:
+        release_date: <date_create("2022-06-21")>
+        game: "@fallguys"
+        platform: "@platform_6"
+
+    gameonplatform_12:
+        release_date: <date_create("2022-06-21")>
+        game: "@fallguys"
+        platform: "@platform_7"
+
+    gameonplatform_13:
+        release_date: <date_create("2020-08-04")>
+        game: "@fallguys"
+        platform: "@platform_4"
+
+    gameonplatform_14:
+        release_date: <date_create("2018-06-15")>
+        game: "@amongus"
+        platform: "@platform_5"
+
+    gameonplatform_15:
+        release_date: <date_create("2018-11-16")>
+        game: "@amongus"
+        platform: "@platform_4"
+
+    gameonplatform_16:
+        release_date: <date_create("2020-12-15")>
+        game: "@amongus"
+        platform: "@platform_3"
+
+    gameonplatform_17:
+        release_date: <date_create("2021-12-14")>
+        game: "@amongus"
+        platform: "@platform_1"
+
+    gameonplatform_18:
+        release_date: <date_create("2021-12-14")>
+        game: "@amongus"
+        platform: "@platform_2"
+
+    gameonplatform_19:
+        release_date: <date_create("2021-12-14")>
+        game: "@amongus"
+        platform: "@platform_6"
+
+    gameonplatform_20:
+        release_date: <date_create("2021-12-14")>
+        game: "@amongus"
+        platform: "@platform_7"
+
+    gameonplatform_21:
+        release_date: <date_create("2020-09-28")>
+        game: "@genshinimpact"
+        platform: "@platform_1"
+
+    gameonplatform_22:
+        release_date: <date_create("2020-09-28")>
+        game: "@genshinimpact"
+        platform: "@platform_4"
+
+    gameonplatform_23:
+        release_date: <date_create("2020-09-28")>
+        game: "@genshinimpact"
+        platform: "@platform_5"
+
+    gameonplatform_24:
+        release_date: <date_create("2021-04-28")>
+        game: "@genshinimpact"
+        platform: "@platform_2"
+
+    gameonplatform_25:
+        release_date: <date_create("2022-10-28")>
+        game: "@bayonetta3"
+        platform: "@platform_3"
+
+    gameonplatform_26:
+        release_date: <date_create("2017-07-21")>
+        game: "@fortnite"
+        platform: "@platform_1"
+
+    gameonplatform_27:
+        release_date: <date_create("2017-07-21")>
+        game: "@fortnite"
+        platform: "@platform_3"
+
+    gameonplatform_28:
+        release_date: <date_create("2017-07-21")>
+        game: "@fortnite"
+        platform: "@platform_4"
+
+    gameonplatform_29:
+        release_date: <date_create("2017-07-21")>
+        game: "@fortnite"
+        platform: "@platform_5"
+
+    gameonplatform_30:
+        release_date: <date_create("2017-07-21")>
+        game: "@fortnite"
+        platform: "@platform_6"
+
+    gameonplatform_31:
+        release_date: <date_create("2020-11-19")>
+        game: "@fortnite"
+        platform: "@platform_2"
+
+    gameonplatform_32:
+        release_date: <date_create("2020-11-10")>
+        game: "@fortnite"
+        platform: "@platform_7"
+    
+    gameonplatform_33:
+        release_date: <date_create("2021-07-21")>
+        game: "@pokemonunite"
+        platform: "@platform_3"
+
+    gameonplatform_34:
+        release_date: <date_create("2021-07-21")>
+        game: "@pokemonunite"
+        platform: "@platform_5"
+
+    gameonplatform_35:
+        release_date: <date_create("2019-09-20")>
+        game: "@ninokuni"
+        platform: "@platform_1"
+
+    gameonplatform_36:
+        release_date: <date_create("2019-09-20")>
+        game: "@ninokuni"
+        platform: "@platform_3"
+
+    gameonplatform_37:
+        release_date: <date_create("2019-09-20")>
+        game: "@ninokuni"
+        platform: "@platform_4"
+
+    gameonplatform_38:
+        release_date: <date_create("2022-09-15")>
+        game: "@ninokuni"
+        platform: "@platform_6"
+    
