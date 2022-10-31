@@ -1,21 +1,3 @@
-App\Entity\Player:
-    player_{1..15}:
-        nickname: <userName()>
-        email: <safeEmail()>
-        password: <password()>
-        available: <boolean()>
-        # Génère une chaîne qui ressemble à un tag Discord
-        # - 8 caractères parmi les lettres de A à Z (minuscule ou majuscules), ou nombre de 0 à 9 ou undescore
-        # - un "#"
-        # - 4 chiffres entre 0 et 9
-        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
-
-    randy:
-        nickname: Sora
-        email: randy.venant@gmail.com
-        password: <password()>
-        available: <boolean()>
-        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
 
 App\Entity\Game:
 
@@ -125,7 +107,7 @@ App\Entity\GameOnPlatform:
     gameonplatform_6:
         release_date: <date_create("2022-11-18")>
         game: "@pokemonviolet"
-        platform: "@platform_7"
+        platform: "@platform_3"
 
     gameonplatform_7:
         release_date: <date_create("2009-10-27")>
@@ -287,3 +269,73 @@ App\Entity\GameOnPlatform:
         game: "@ninokuni"
         platform: "@platform_6"
     
+
+App\Entity\Player:
+    player_{1..15}:
+        nickname: <userName()>
+        email: <safeEmail()>
+        password: <password()>
+        available: <boolean()>
+        # Génère une chaîne qui ressemble à un tag Discord
+        # - 8 caractères parmi les lettres de A à Z (minuscule ou majuscules), ou nombre de 0 à 9 ou undescore
+        # - un "#"
+        # - 4 chiffres entre 0 et 9
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        # Prend 5 gop au hasard parmi ceux dont l'index de fixture commence par "gop_"
+        owned_games: '5x @gameonplatform_*'
+        wants_to_play: '5x @gameonplatform_*'
+        
+
+    randy:
+        nickname: Sora
+        email: randy.venant@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_1','@gameonplatform_3','@gameonplatform_6','@gameonplatform_8','@gameonplatform_9','@gameonplatform_37']
+        wants_to_play: ['@gameonplatform_1','@gameonplatform_37']
+        
+    bgdu92:
+        nickname: Bgdu92
+        email: bgdu92@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_37','@gameonplatform_29','@gameonplatform_5','@gameonplatform_17','@gameonplatform_6','@gameonplatform_22','@gameonplatform_18']
+        wants_to_play: ['@gameonplatform_37','@gameonplatform_29','@gameonplatform_5','@gameonplatform_17','@gameonplatform_6','@gameonplatform_22','@gameonplatform_18']
+        
+    Nathan:
+        nickname: Solaire
+        email: NathanSoleil@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_1','@gameonplatform_2','@gameonplatform_34','@gameonplatform_14']
+        wants_to_play: ['@gameonplatform_1','@gameonplatform_2']
+
+    Celia:
+        nickname: StuckInGold4Life
+        email: Support@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_19','@gameonplatform_22','@gameonplatform_24','@gameonplatform_25']
+        wants_to_play: ['@gameonplatform_1','@gameonplatform_34','@gameonplatform_14']
+        
+    Corentin:
+        nickname: Coren
+        email: tin@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_28','@gameonplatform_29','@gameonplatform_31','@gameonplatform_4']
+        wants_to_play: ['@gameonplatform_29','@gameonplatform_31','@gameonplatform_4']
+
+    Quentin:
+        nickname: Quen
+        email: tinBis@gmail.com
+        password: <password()>
+        available: <boolean()>
+        discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
+        owned_games: ['@gameonplatform_22','@gameonplatform_6','@gameonplatform_9','@gameonplatform_35']
+        wants_to_play: ['@gameonplatform_22']
