@@ -6,6 +6,7 @@ use App\Repository\GameOnPlatformRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GameOnPlatformRepository::class)
@@ -21,6 +22,7 @@ class GameOnPlatform
 
     /**
      * @ORM\Column(type="date")
+     * 
      */
     private $release_date;
 
@@ -42,7 +44,7 @@ class GameOnPlatform
 
     /**
      * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="supportedGames")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false)@Groups({"gameonplatforms"})
      */
     private $platform;
 
