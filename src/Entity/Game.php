@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class Game
      * @ORM\Column(type="boolean")
      */
     private $has_multiplayer_mode;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true)
+     */
+    private $releases;
+
+    public function __construct()
+    {
+        $this->releases = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class Game
     public function setHasMultiplayerMode(bool $has_multiplayer_mode): self
     {
         $this->has_multiplayer_mode = $has_multiplayer_mode;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameOnPlatform>
+     */
+    public function getReleases(): Collection
+    {
+        return $this->releases;
+    }
+
+    public function addRelease(GameOnPlatform $release): self
+    {
+        if (!$this->releases->contains($release)) {
+            $this->releases[] = $release;
+            $release->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelease(GameOnPlatform $release): self
+    {
+        if ($this->releases->removeElement($release)) {
+            // set the owning side to null (unless already changed)
+            if ($release->getGame() === $this) {
+                $release->setGame(null);
+            }
+        }
 
         return $this;
     }
