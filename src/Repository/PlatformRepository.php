@@ -39,6 +39,37 @@ class PlatformRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Récupère mes platformes par ordre alphabétique en bdd
+     * 
+     * @return Platform[]
+     */
+    public function findAllOrderByNameSearch($needle = null): array
+       {
+           return $this->createQueryBuilder('p')
+                ->orderBy('p.name')
+                ->where('p.name LIKE :needle')
+                ->setParameter(':needle',"%".$needle."%")
+                ->getQuery()
+                ->getResult()
+           ;
+       }
+
+       /**
+     * Récupère mes plateformes de la plus récente à la plus ancienne
+     * 
+     * @return Movie[]
+     */
+    public function findAllOrderByReleaseDate(): array
+    {
+        return $this->createQueryBuilder('p')
+             ->orderBy('p.release_date','DESC')
+             ->setMaxResults(10)
+             ->getQuery()
+             ->getResult()
+        ;
+    } 
+
 //    /**
 //     * @return Platform[] Returns an array of Platform objects
 //     */
