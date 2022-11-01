@@ -5,14 +5,18 @@ namespace App\Controller\Api;
 use App\Entity\Game;
 use App\Repository\GameRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GameController extends AbstractController
 {
     /**
-     * @Route("/api/games", name="app_api_games_get_collection")
+     * @Route("/api/games", name="api_games")
      */
     public function getCollection(GameRepository $gameRepository): JsonResponse
     {
@@ -22,13 +26,14 @@ class GameController extends AbstractController
             $games,
             Response::HTTP_OK,
             [],
-            ['groups' => 'games']);
+            ['groups' => 'games']
+        );
     }
 
     /**
      * Get Item
-     * 
-     * @Route("/api/games/{id}", name="app_api_games_get_item", methods={"GET"})
+     *
+     * @Route("/api/games/{id}", name="api_games_single", methods={"GET"})
      */
     public function getItem(Game $game = null): JsonResponse
     {

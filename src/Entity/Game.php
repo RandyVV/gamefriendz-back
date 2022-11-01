@@ -17,7 +17,7 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"games", "game"})
+     * @Groups({"games"})
      * @Groups({"game"})
      */
     private $id;
@@ -43,6 +43,7 @@ class Game
 
     /**
      * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true)
+     * @Groups({"game"})
      */
     private $releases;
 

@@ -18,12 +18,14 @@ class Platform
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"platforms"})
+     * @Groups({"game"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"platforms"})
+     * @Groups({"game"})
      */
     private $name;
 

@@ -17,12 +17,13 @@ class GameOnPlatform
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"game"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
-     * 
+     * @Groups({"game"})
      */
     private $release_date;
 
@@ -45,6 +46,7 @@ class GameOnPlatform
     /**
      * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="supportedGames")
      * @ORM\JoinColumn(nullable=false)@Groups({"gameonplatforms"})
+     * @Groups({"game"})
      */
     private $platform;
 

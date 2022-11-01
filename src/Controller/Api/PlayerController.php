@@ -2,9 +2,11 @@
 
 namespace App\Controller\Api;
 
+use App\Entity\GameOnPlatform;
 use App\Entity\Player;
 use App\Repository\PlayerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,5 +31,16 @@ class PlayerController extends AbstractController
             [],
             ['groups' => 'player']
         );
+    }
+
+    /**
+     * @Route("/api/players/{id}/ownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
+     */
+    public function addOwnedGame(Player $player, Request $request)
+    {
+        $player->addOwnedGame($gameonplatform);
+
+        $em->persist($player);
+        $em->flush();
     }
 }
