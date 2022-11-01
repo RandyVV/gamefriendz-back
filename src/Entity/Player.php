@@ -6,6 +6,7 @@ use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
@@ -16,11 +17,13 @@ class Player
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"player"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"player"})
      */
     private $nickname;
 
@@ -36,11 +39,13 @@ class Player
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"player"})
      */
     private $available;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"player"})
      */
     private $discord_tag;
 

@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
@@ -16,26 +17,33 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"games"})
+     * @Groups({"game"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"games"})
+     * @Groups({"game"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"game"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"game"})
      */
     private $has_multiplayer_mode;
 
     /**
      * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true)
+     * @Groups({"game"})
      */
     private $releases;
 
