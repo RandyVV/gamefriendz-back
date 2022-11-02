@@ -4,12 +4,20 @@ namespace App\Controller\Api;
 
 use App\Entity\GameOnPlatform;
 use App\Entity\Player;
+use App\Repository\GameOnPlatformRepository;
 use App\Repository\PlayerRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class PlayerController extends AbstractController
 {
@@ -36,11 +44,28 @@ class PlayerController extends AbstractController
     /**
      * @Route("/api/players/{id}/ownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
      */
-    public function addOwnedGame(Player $player, Request $request)
+    public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
-        $player->addOwnedGame($gameonplatform);
+        // On met dans une variable le contenu de la requete post sous forme de tableau
+        $postData = $request->toArray();
+
+        $gopId = $postData["id"];
+
+        $gop = $gopRepository->find($gopId);
+
+        $player->addOwnedGame($gop);
 
         $em->persist($player);
         $em->flush();
+
+        return $this->json(
+            $player,
+            Response::HTTP_CREATED,
+            [],
+            ['groups' => 'player']
+        );
     }
+
+    
 }
+
