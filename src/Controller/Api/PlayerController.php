@@ -90,5 +90,31 @@ class PlayerController extends AbstractController
             ['groups' => 'player']
         );
     }
+
+    /**
+     * @Route("/api/players/{id}/removeownedgames", methods={"DELETE"}, name="api_players_single_remove_ownedgame")
+     */
+    public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
+    {
+        // On met dans une variable le contenu de la requete post sous forme de tableau
+        $postData = $request->toArray();
+
+        $gopId = $postData["id"];
+
+        $gop = $gopRepository->find($gopId);
+
+        $player->removeOwnedGame($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        return $this->json(
+            $player,
+            Response::HTTP_ACCEPTED,
+            [],
+            ['groups' => 'player']
+        );
+    }
+
 }
 
