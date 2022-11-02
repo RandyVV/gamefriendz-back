@@ -6,51 +6,65 @@ App\Entity\Game:
         title: Pokemon Violet
         description: Découvrez Paldea, un vaste monde ouvert inspiré des paysages ibériques, et qui, pour la première fois dans l’histoire Pokémon, est entièrement explorable ! Plongez dans des terres baignées de soleil et regorgeant d’environnements lumineux, où cohabitent de nombreux Pokémon à attraper !
         has_multiplayer_mode: true
+        picture: "https://assets.nintendo.com/image/upload/c_fill,w_1200/q_auto:best/f_auto/dpr_2.0/ncom/fr_CA/games/switch/p/pokemon-violet-switch/hero"
+        
 
     leagueoflegends:
         title: League of Legends
         description: League of Legends est un jeu vidéo sorti en 2009 de type arène de bataille en ligne, free-to-play, développé et édité par Riot Games sur Windows et Mac OS.
         has_multiplayer_mode: true
+        picture: "https://www.warlegend.net/wp-content/uploads/league-of-legends.jpg"
+        
 
     eldenring:
         title: Elden Ring
         description: Elden Ring est un jeu vidéo d'action-RPG développé par FromSoftware et édité par Bandai Namco Entertainment, issu de la collaboration entre le créateur de jeux vidéo Hidetaka Miyazaki et l'écrivain George R. R. Martin.
         has_multiplayer_mode: true
+        picture: "https://static.bandainamcoent.eu/high/elden-ring/elden-ring/00-page-setup/elden-ring-new-header-mobile.jpg"
+        
 
     fallguys:
         title: Fall Guys
         description: Fall Guys, anciennement Fall Guys Ultimate Knockout, est un jeu vidéo de type battle royale multijoueur développé par Mediatonic.
         has_multiplayer_mode: true
+        picture: "https://static.actugaming.net/media/2020/08/fall-guys3.jpg"
+        
 
     amongus:
         title: Among Us
         description: Among Us est un jeu vidéo d'ambiance multijoueur en ligne développé et édité par le studio InnerSloth.
         has_multiplayer_mode: true
+        picture: "https://www.ecranlarge.com/media/cache/1600x1200/uploads/image/001/392/among-us-photo-1392507.jpg"
 
     genshinimpact:
         title: Genshin Impact
         description: Genshin Impact est un jeu vidéo de type action-RPG développé par miHoYo.
         has_multiplayer_mode: true
+        picture: "https://geekbecois.com/wp-content/uploads/2021/01/genshin-impact-2.jpg"
 
     bayonetta3:
         title: Bayonetta 3
         description: Bayonetta 3 est un jeu vidéo de type beat them all développé par Platinum Games et édité par Nintendo.
         has_multiplayer_mode: false
+        picture: "https://www.journalduweb.org/wp-content/uploads/2022/07/bayonetta-3-860x484.jpg"
 
     fortnite:
         title: Fortnite
         description: Fortnite est un jeu en ligne développé par Epic Games sous la forme de différents modes de jeu qui partagent le même gameplay général et le même moteur de jeu.
         has_multiplayer_mode: true
+        picture: "https://pic.clubic.com/v1/images/1957470/raw.webp?fit=smartCrop&width=1600&height=900&hash=8ebd2ae6467564dd023264a5ce8f59a564bb94cc"
 
     pokemonunite:
         title: Pokemon Unite
         description: Pokémon Unite est un jeu vidéo d'arène de bataille en ligne multijoueur développé par TiMi Studios et édité par Tencent en partenariat avec The Pokémon Company. Il est le premier jeu de combat stratégique en équipe Pokémon.
         has_multiplayer_mode: true
+        picture: "https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/games_15/nintendo_switch_download_software_1/H2x1_NSwitchDS_PokemonUnite_image1600w.jpg"
 
     ninokuni:
         title: Ni No Kuni La Vengeance de la sorcière céleste
         description: Ni no kuni est un jeu vidéo de rôle développé par la société japonaise Level-5 et le studio d'animation Ghibli.
         has_multiplayer_mode: false
+        picture: "https://assets.nintendo.com/image/upload/ar_16:9,b_auto:border,c_lpad/b_white/f_auto/q_auto/dpr_1.0/c_scale,w_700/ncom/fr_CA/games/switch/n/ni-no-kuni-wrath-of-the-white-witch-switch/hero"
 
 
 App\Entity\Platform:
