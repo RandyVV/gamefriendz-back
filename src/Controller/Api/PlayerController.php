@@ -66,6 +66,29 @@ class PlayerController extends AbstractController
         );
     }
 
-    
+    /**
+     * @Route("/api/players/{id}/wantstoplay", methods={"POST"}, name="api_players_single_add_wantstoplay")
+     */
+    public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
+    {
+        // On met dans une variable le contenu de la requete post sous forme de tableau
+        $postData = $request->toArray();
+
+        $gopId = $postData["id"];
+
+        $gop = $gopRepository->find($gopId);
+
+        $player->addWantsToPlay($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        return $this->json(
+            $player,
+            Response::HTTP_CREATED,
+            [],
+            ['groups' => 'player']
+        );
+    }
 }
 
