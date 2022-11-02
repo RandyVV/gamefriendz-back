@@ -19,6 +19,7 @@ class Game
      * @ORM\Column(type="integer")
      * @Groups({"games"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $id;
 
@@ -26,18 +27,21 @@ class Game
      * @ORM\Column(type="string", length=255)
      * @Groups({"games"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $has_multiplayer_mode;
 
@@ -51,6 +55,7 @@ class Game
      * @ORM\Column(type="string", length=255)
      * @Groups({"games"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $picture;
 

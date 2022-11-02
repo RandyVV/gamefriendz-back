@@ -18,28 +18,33 @@ class GameOnPlatform
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="date")
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $release_date;
 
     /**
      * @ORM\ManyToMany(targetEntity=Player::class, mappedBy="owned_games")
+     * 
      */
     private $owners;
 
     /**
      * @ORM\ManyToMany(targetEntity=Player::class, mappedBy="wants_to_play")
+     * 
      */
     private $players;
 
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="releases")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"player"})
      */
     private $game;
 
@@ -47,6 +52,7 @@ class GameOnPlatform
      * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="supportedGames")
      * @ORM\JoinColumn(nullable=false)@Groups({"gameonplatforms"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $platform;
 

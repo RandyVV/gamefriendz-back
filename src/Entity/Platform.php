@@ -19,6 +19,7 @@ class Platform
      * @ORM\Column(type="integer")
      * @Groups({"platforms"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $id;
 
@@ -26,6 +27,7 @@ class Platform
      * @ORM\Column(type="string", length=255)
      * @Groups({"platforms"})
      * @Groups({"game"})
+     * @Groups({"player"})
      */
     private $name;
 
