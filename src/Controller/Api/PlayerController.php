@@ -2,22 +2,15 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\GameOnPlatform;
 use App\Entity\Player;
 use App\Repository\GameOnPlatformRepository;
-use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+
 
 class PlayerController extends AbstractController
 {
@@ -41,16 +34,17 @@ class PlayerController extends AbstractController
         );
     }
 
+
     /**
-     * @Route("/api/players/{id}/ownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
+     * @Route("/api/players/{id}/addownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
      */
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
-
+        
         $gopId = $postData["id"];
-
+        
         $gop = $gopRepository->find($gopId);
 
         $player->addOwnedGame($gop);
@@ -67,7 +61,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/wantstoplay", methods={"POST"}, name="api_players_single_add_wantstoplay")
+     * @Route("/api/players/{id}/addwantstoplay", methods={"POST"}, name="api_players_single_add_wantstoplay")
      */
     public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
@@ -104,6 +98,31 @@ class PlayerController extends AbstractController
         $gop = $gopRepository->find($gopId);
 
         $player->removeOwnedGame($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        return $this->json(
+            $player,
+            Response::HTTP_ACCEPTED,
+            [],
+            ['groups' => 'player']
+        );
+    }
+
+    /**
+     * @Route("/api/players/{id}/removewantstotlay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
+     */
+    public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
+    {
+        // On met dans une variable le contenu de la requete post sous forme de tableau
+        $postData = $request->toArray();
+
+        $gopId = $postData["id"];
+
+        $gop = $gopRepository->find($gopId);
+
+        $player->removeWantsToPlay($gop);
 
         $em->persist($player);
         $em->flush();
