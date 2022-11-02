@@ -49,6 +49,8 @@ class Game
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"games"})
+     * @Groups({"game"})
      */
     private $picture;
 

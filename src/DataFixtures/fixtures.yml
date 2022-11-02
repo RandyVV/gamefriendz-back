@@ -6,51 +6,61 @@ App\Entity\Game:
         title: Pokemon Violet
         description: Découvrez Paldea, un vaste monde ouvert inspiré des paysages ibériques, et qui, pour la première fois dans l’histoire Pokémon, est entièrement explorable ! Plongez dans des terres baignées de soleil et regorgeant d’environnements lumineux, où cohabitent de nombreux Pokémon à attraper !
         has_multiplayer_mode: true
+        
 
     leagueoflegends:
         title: League of Legends
         description: League of Legends est un jeu vidéo sorti en 2009 de type arène de bataille en ligne, free-to-play, développé et édité par Riot Games sur Windows et Mac OS.
         has_multiplayer_mode: true
+        
 
     eldenring:
         title: Elden Ring
         description: Elden Ring est un jeu vidéo d'action-RPG développé par FromSoftware et édité par Bandai Namco Entertainment, issu de la collaboration entre le créateur de jeux vidéo Hidetaka Miyazaki et l'écrivain George R. R. Martin.
         has_multiplayer_mode: true
+        
 
     fallguys:
         title: Fall Guys
         description: Fall Guys, anciennement Fall Guys Ultimate Knockout, est un jeu vidéo de type battle royale multijoueur développé par Mediatonic.
         has_multiplayer_mode: true
+        
 
     amongus:
         title: Among Us
         description: Among Us est un jeu vidéo d'ambiance multijoueur en ligne développé et édité par le studio InnerSloth.
         has_multiplayer_mode: true
+        
 
     genshinimpact:
         title: Genshin Impact
         description: Genshin Impact est un jeu vidéo de type action-RPG développé par miHoYo.
         has_multiplayer_mode: true
+        
 
     bayonetta3:
         title: Bayonetta 3
         description: Bayonetta 3 est un jeu vidéo de type beat them all développé par Platinum Games et édité par Nintendo.
         has_multiplayer_mode: false
+        
 
     fortnite:
         title: Fortnite
         description: Fortnite est un jeu en ligne développé par Epic Games sous la forme de différents modes de jeu qui partagent le même gameplay général et le même moteur de jeu.
         has_multiplayer_mode: true
+        
 
     pokemonunite:
         title: Pokemon Unite
         description: Pokémon Unite est un jeu vidéo d'arène de bataille en ligne multijoueur développé par TiMi Studios et édité par Tencent en partenariat avec The Pokémon Company. Il est le premier jeu de combat stratégique en équipe Pokémon.
         has_multiplayer_mode: true
+        
 
     ninokuni:
         title: Ni No Kuni La Vengeance de la sorcière céleste
         description: Ni no kuni est un jeu vidéo de rôle développé par la société japonaise Level-5 et le studio d'animation Ghibli.
         has_multiplayer_mode: false
+        
 
 
 App\Entity\Platform:
