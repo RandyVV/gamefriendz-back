@@ -19,6 +19,7 @@ class GameOnPlatform
      * @ORM\Column(type="integer")
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -26,6 +27,7 @@ class GameOnPlatform
      * @ORM\Column(type="date")
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $release_date;
 
@@ -53,6 +55,7 @@ class GameOnPlatform
      * @ORM\JoinColumn(nullable=false)@Groups({"gameonplatforms"})
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $platform;
 
