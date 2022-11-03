@@ -35,6 +35,7 @@ class Game
      * @ORM\Column(type="text")
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $description;
 
@@ -42,12 +43,14 @@ class Game
      * @ORM\Column(type="boolean")
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $has_multiplayer_mode;
 
     /**
      * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true)
      * @Groups({"game"})
+     * @Groups({"games"})
      */
     private $releases;
 
@@ -56,6 +59,7 @@ class Game
      * @Groups({"games"})
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $picture;
 

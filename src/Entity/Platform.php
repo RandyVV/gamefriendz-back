@@ -20,6 +20,7 @@ class Platform
      * @Groups({"platforms"})
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -28,6 +29,7 @@ class Platform
      * @Groups({"platforms"})
      * @Groups({"game"})
      * @Groups({"player"})
+     * @Groups({"games"})
      */
     private $name;
 

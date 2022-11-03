@@ -135,5 +135,9 @@ class PlayerController extends AbstractController
         );
     }
 
+    public function searchPlayer(Player $player)
+    {
+
+    }
 }
 

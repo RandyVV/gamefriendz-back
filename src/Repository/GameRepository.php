@@ -40,6 +40,39 @@ class GameRepository extends ServiceEntityRepository
     }
 
 
+
+    public function searchGame(array $criterias): array
+{
+   $queryBuilder = $this->createQueryBuilder('g')
+       ->select('g')
+       ->from(Game::class, 'g');
+       
+    if (key_exists('title', $criterias)) {
+        $title = $criterias['title'];
+        
+        $queryBuilder->where('g.title LIKE = :title')
+            ->setParameter('title', '%' . $title . '%');
+    }
+    
+    if (key_exists('platform', $criterias)) {
+        $platform = $criterias['platform'];
+        
+        $queryBuilder->where('g.platform LIKE = :platform')
+            ->setParameter('platform', '%' . $platform . '%');
+    }
+    
+    
+    return $queryBuilder->orderBy('g.id', 'ASC')
+        ->getQuery()
+        ->getResult()
+    ;
+    
+    // Sans critère :
+    // SELECT * FROM game ORDER BY id ASC
+    
+    // Avec seleulement le critère "available"
+    // SELECT * FROM game WHERE available = TRUE ORDER BY id ASC
+}
 //    /**
 //     * @return Game[] Returns an array of Game objects
 //     */

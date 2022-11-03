@@ -39,6 +39,45 @@ class PlayerRepository extends ServiceEntityRepository
         }
     }
 
+    public function searchPlayer(array $criterias): array
+    {
+       $queryBuilder = $this->createQueryBuilder('p')
+           ->select('p')
+           ->from(Player::class, 'p');
+           
+        if (key_exists('nickname', $criterias)) {
+            $nickname = $criterias['nickname'];
+            
+            $queryBuilder->where('p.nickname LIKE = :nickname')
+                ->setParameter('nickname', '%' . $nickname . '%');
+        }
+        
+        if (key_exists('discord_tag', $criterias)) {
+            $discordTag = $criterias['discord_tag'];
+            
+            $queryBuilder->where('p.discord_tag LIKE = :discord_tag')
+                ->setParameter('discord_tag', '%' . $discordTag . '%');
+        }
+        
+        if (key_exists('available', $criterias)) {
+            $available = $criterias['available'];
+            
+            $queryBuilder->where('p.available = :available')
+                ->setParameter('available', boolval($available));
+        }
+        
+        return $queryBuilder->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+        
+        // Sans critère :
+        // SELECT * FROM player ORDER BY id ASC
+        
+        // Avec seulement le critère "available"
+        // SELECT * FROM player WHERE available = TRUE ORDER BY id ASC
+    }
+    
 //    /**
 //     * @return Player[] Returns an array of Player objects
 //     */
