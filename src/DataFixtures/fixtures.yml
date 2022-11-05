@@ -303,7 +303,7 @@ App\Entity\Player:
     randy:
         nickname: Sora
         email: randy.venant@gmail.com
-        password: <password()>
+        password: titi
         available: <boolean()>
         discord_tag: <regexify("[A-Za-z0-9_]{8}\#[0-9]{4}")>
         owned_games: ['@gameonplatform_1','@gameonplatform_3','@gameonplatform_6','@gameonplatform_8','@gameonplatform_9','@gameonplatform_37']

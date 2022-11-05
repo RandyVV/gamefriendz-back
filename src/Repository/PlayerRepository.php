@@ -55,6 +55,7 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
 
         $this->add($player, true);
     }
+    
     // Méthode pour ajouter des critères de recherche
     public function searchPlayer(array $criterias): array
     {
