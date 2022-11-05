@@ -57,37 +57,68 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
     }
     
     // Méthode pour ajouter des critères de recherche
-    public function searchPlayer(array $criterias): array
+    public function searchPlayers(array $criterias): array
     {
-       $queryBuilder = $this->createQueryBuilder('p')
-           ->select('p')
-           ->from(Player::class, 'p');
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('p');
 
-        // Critère de recherche par le pseudo
+        /* RECHERCHE PAR PSEUDO, TAG DISCORD */
+        $byNickname = false;
+        $nickname = null;
         if (key_exists('nickname', $criterias)) {
+            $byNickname = true;
             $nickname = $criterias['nickname'];
-            
-            $queryBuilder->where('p.nickname LIKE = :nickname')
-                ->setParameter('nickname', '%' . $nickname . '%');
         }
         
-        // Critère de recherche par le discord_tag
+        $byDiscordTag = false;
+        $discordTag = null;
         if (key_exists('discord_tag', $criterias)) {
+            $byDiscordTag = true;
             $discordTag = $criterias['discord_tag'];
-            
-            $queryBuilder->where('p.discord_tag LIKE = :discord_tag')
+        }
+
+        /*
+        Players :
+            1 [pseudo => tartampion, discord => abc]
+            2 [pseudo => autrechose, discord => bcd]
+            3 [pseudo => tartatin, discord => xyz]
+
+        Recherche [pseudo => tar] => 1,3
+        Recherche [discord => bc] => 1,2
+        Recherche [pseudo => tar, discord => bc] => 1,2,3
+        */
+
+        if ($byNickname && $byDiscordTag) {
+            // recherche par pseudo ET tag discord
+            //  => on prend les joueurs pour lesquels le pseudo OU le tag discord contiennent le terme de recherche
+            $queryBuilder->andWhere('p.nickname LIKE :nickname OR p.discord_tag LIKE :discord_tag')
+                ->setParameters([
+                    'nickname' => '%' . $nickname . '%',
+                    'discord_tag' => '%' . $discordTag . '%'
+                ]);
+        }
+        elseif ($byNickname) {
+            // recherche par pseudo (SANS tag discord)
+            //  => on prend les joueurs dont SEUL le pseudo contient le terme de recherche
+            $queryBuilder->andWhere('p.nickname LIKE :nickname')
+                ->setParameter('nickname', '%' . $nickname . '%');
+        }
+        elseif ($byDiscordTag) {
+            // recherche par tag discord (SANS pseudo)
+            //  => on prend les joueurs dont SEUL le tag discord contient le terme de recherche
+            $queryBuilder->andWhere('p.discord_tag LIKE :discord_tag')
                 ->setParameter('discord_tag', '%' . $discordTag . '%');
         }
-        // Recherche par joueur connecté ou non connecté
+
+        /* RECHERCHE PAR DISPONIBILITÉ */
         if (key_exists('available', $criterias)) {
             $available = $criterias['available'];
             
-            $queryBuilder->where('p.available = :available')
+            $queryBuilder->andWhere('p.available = :available')
                 ->setParameter('available', boolval($available));
         }
-        
-        return $queryBuilder->orderBy('p.id', 'ASC')
-            ->getQuery()
+
+        return $queryBuilder->getQuery()
             ->getResult()
         ;
         

@@ -3,13 +3,14 @@
 namespace App\Controller\Api;
 
 use App\Entity\Player;
-use App\Repository\GameOnPlatformRepository;
+use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Repository\GameOnPlatformRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 class PlayerController extends AbstractController
@@ -135,9 +136,32 @@ class PlayerController extends AbstractController
         );
     }
 
-    public function searchPlayer(Player $player)
+    /**
+     * Search items
+     * 
+     * Critères de recherche supportés :
+     *  nickname : recherche par pseudo
+     *  discord_tag : recherche par le tag discord d'un joueur
+     * 
+     * @Route("/api/players/search", name="api_players_search", methods={"POST"})
+     */
+    public function searchItems(PlayerRepository $playerRepository, Request $request): JsonResponse
     {
+        // on récupère les critères de recherche depuis...
+        // le contenu POST de la requête
+        $jsonContent = $request->getContent();
+        // SERIALIZE / ENCODE : ['key' => 'value'] ==> '{"key":"value"}'
+        // DESERIALIZE / DECODE : '{"key":"value"}' => ['key' => 'value']
+        $criterias = json_decode($jsonContent, true);
 
+        $players = $playerRepository->searchPlayers($criterias);
+
+        return $this->json(
+            $players,
+            Response::HTTP_OK,
+            [],
+            ['groups' => 'players']
+        );
     }
 }
 
