@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Player;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
  * @extends ServiceEntityRepository<Player>
@@ -14,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Player[]    findAll()
  * @method Player[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class PlayerRepository extends ServiceEntityRepository
+class PlayerRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -39,12 +42,27 @@ class PlayerRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Used to upgrade (rehash) the user's password automatically over time.
+     */
+    public function upgradePassword(PasswordAuthenticatedUserInterface $player, string $newHashedPassword): void
+    {
+        if (!$player instanceof Player) {
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($player)));
+        }
+
+        $player->setPassword($newHashedPassword);
+
+        $this->add($player, true);
+    }
+    // Méthode pour ajouter des critères de recherche
     public function searchPlayer(array $criterias): array
     {
        $queryBuilder = $this->createQueryBuilder('p')
            ->select('p')
            ->from(Player::class, 'p');
-           
+
+        // Critère de recherche par le pseudo
         if (key_exists('nickname', $criterias)) {
             $nickname = $criterias['nickname'];
             
@@ -52,13 +70,14 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('nickname', '%' . $nickname . '%');
         }
         
+        // Critère de recherche par le discord_tag
         if (key_exists('discord_tag', $criterias)) {
             $discordTag = $criterias['discord_tag'];
             
             $queryBuilder->where('p.discord_tag LIKE = :discord_tag')
                 ->setParameter('discord_tag', '%' . $discordTag . '%');
         }
-        
+        // Recherche par joueur connecté ou non connecté
         if (key_exists('available', $criterias)) {
             $available = $criterias['available'];
             
