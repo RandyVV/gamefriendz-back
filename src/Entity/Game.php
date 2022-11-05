@@ -56,7 +56,6 @@ class Game
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"games"})
      * @Groups({"game"})
      * @Groups({"player"})
      * @Groups({"games"})
