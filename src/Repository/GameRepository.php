@@ -39,14 +39,14 @@ class GameRepository extends ServiceEntityRepository
         }
     }
 
-
-
+    // Méthode de recherche par critères
     public function searchGame(array $criterias): array
 {
    $queryBuilder = $this->createQueryBuilder('g')
        ->select('g')
        ->from(Game::class, 'g');
-       
+    
+    // Recherche par titre de jeu
     if (key_exists('title', $criterias)) {
         $title = $criterias['title'];
         
@@ -54,6 +54,7 @@ class GameRepository extends ServiceEntityRepository
             ->setParameter('title', '%' . $title . '%');
     }
     
+    // Recherche par plateforme
     if (key_exists('platform', $criterias)) {
         $platform = $criterias['platform'];
         
@@ -70,7 +71,7 @@ class GameRepository extends ServiceEntityRepository
     // Sans critère :
     // SELECT * FROM game ORDER BY id ASC
     
-    // Avec seleulement le critère "available"
+    // Avec seulelement le critère "available"
     // SELECT * FROM game WHERE available = TRUE ORDER BY id ASC
 }
 //    /**
