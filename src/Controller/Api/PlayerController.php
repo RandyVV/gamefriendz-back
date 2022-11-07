@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Player;
+use App\Form\PlayerType;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GameOnPlatformRepository;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 class PlayerController extends AbstractController
@@ -43,9 +45,9 @@ class PlayerController extends AbstractController
     {
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
-        
+
         $gopId = $postData["id"];
-        
+
         $gop = $gopRepository->find($gopId);
 
         $player->addOwnedGame($gop);
@@ -163,5 +165,35 @@ class PlayerController extends AbstractController
             ['groups' => 'players']
         );
     }
-}
 
+    /**
+     * @Route("/api/new/player", name="api_new_player", methods={"GET", "POST"})
+     */
+    public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $player = new Player();
+        $form = $this->createForm(PlayerType::class, $player);
+        $form->handleRequest($request);
+
+        dd($form->isSubmitted());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // le form a "peuplé" l'entité depuis la requête
+            // donc le $user contient son mot de passe en clair...
+
+            // on hâche le mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
+            // on écrase le mot de passe dans le User
+            $player->setPassword($hashedPassword);
+
+            $playerRepository->add($player, true);
+
+            return $this->json(
+                $player,
+                Response::HTTP_CREATED,
+                [],
+                ['groups' => 'player']
+            );
+        }
+    }
+}
