@@ -74,6 +74,7 @@ class GameController extends AbstractController
             $games,
             Response::HTTP_OK,
             [],
+            ['Access-Control-Allow-Origin' => '*'],
             ['groups' => 'games']
         );
     }
