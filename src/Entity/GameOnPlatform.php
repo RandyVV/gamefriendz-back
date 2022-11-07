@@ -52,7 +52,8 @@ class GameOnPlatform
 
     /**
      * @ORM\ManyToOne(targetEntity=Platform::class, inversedBy="supportedGames")
-     * @ORM\JoinColumn(nullable=false)@Groups({"gameonplatforms"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"gameonplatforms"})
      * @Groups({"game"})
      * @Groups({"player"})
      * @Groups({"games"})
