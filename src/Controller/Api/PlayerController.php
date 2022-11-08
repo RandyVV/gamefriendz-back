@@ -18,6 +18,22 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class PlayerController extends AbstractController
 {
     /**
+     * @Route("/api/players", name="api_players")
+     */
+    public function getCollection(PlayerRepository $playerRepository): JsonResponse
+    {
+        $players = $playerRepository->findAll();
+
+        return $this->json(
+            $players,
+            Response::HTTP_OK,
+            [],
+            ['groups' => 'players']
+        );
+    }
+
+
+    /**
      * Get Item
      * 
      * @Route("/api/players/{id}", name="app_api_players_get_item", methods={"GET"})
