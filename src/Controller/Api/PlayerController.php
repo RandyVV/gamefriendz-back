@@ -188,23 +188,32 @@ class PlayerController extends AbstractController
     public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $player = new Player();
-        $form = $this->createForm(PlayerType::class, $player);
-        $form->handleRequest($request);
+        $form = $this->createForm(PlayerType::class, $player, ['csrf_protection' => false]);
 
+        $jsonContent = $request->getContent();
+        $requestData = json_decode($jsonContent, true);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $form->submit($requestData);
+
+        if ($form->isValid()) {
             // on hâche le mot de passe
             $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
             // on écrase le mot de passe dans le User
             $player->setPassword($hashedPassword);
 
             $playerRepository->add($player, true);
+
+            return $this->json(
+                $player,
+                Response::HTTP_CREATED,
+                [],
+                ['groups' => 'authenticate']
+            );
         }
+
         return $this->json(
-            $player,
-            Response::HTTP_CREATED,
-            [],
-            ['groups' => 'authenticate']
+            ['errors' => $form->getErrors()],
+            Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 }
