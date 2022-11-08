@@ -58,7 +58,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"players"})
      * @Groups({"players_public"})
      */
-    private $available;
+    private $available = false;
 
     /**
      * @ORM\Column(type="string", length=255)
