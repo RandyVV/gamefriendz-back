@@ -14,4 +14,4 @@ composer create-project symfony/website-skeleton my-project
 - Utiliser la commande:
 bin/console make:migrations:migrate
 - Utiliser la commande:
-bin/console make:fixtures:load
+php bin/console doctrine:fixtures:load

@@ -31,11 +31,13 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      * @Groups({"players"})
      * @Groups({"players_public"})
+     * @Groups({"authenticate"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"authenticate"})
      */
     private $email;
 
@@ -46,6 +48,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"authenticate"})
      */
     private $password;
 
@@ -61,6 +64,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      * @Groups({"player"})
      * @Groups({"players"})
+     * @Groups({"authenticate"})
      */
     private $discord_tag;
 

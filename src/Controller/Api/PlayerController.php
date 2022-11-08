@@ -204,7 +204,7 @@ class PlayerController extends AbstractController
             $player,
             Response::HTTP_CREATED,
             [],
-            ['groups' => 'player']
+            ['groups' => 'authenticate']
         );
     }
 }
