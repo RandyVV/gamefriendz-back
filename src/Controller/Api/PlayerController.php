@@ -28,7 +28,7 @@ class PlayerController extends AbstractController
             $players,
             Response::HTTP_OK,
             [],
-            ['groups' => 'players']
+            ['groups' => 'player']
         );
     }
 

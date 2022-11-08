@@ -22,7 +22,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"player"})
-     * @Groups({"players"})
      * @Groups({"players_public"})
      */
     private $id;
@@ -30,7 +29,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"player"})
-     * @Groups({"players"})
      * @Groups({"players_public"})
      */
     private $nickname;
@@ -53,7 +51,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"player"})
-     * @Groups({"players"})
      * @Groups({"players_public"})
      */
     private $available;
@@ -61,7 +58,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"player"})
-     * @Groups({"players"})
      */
     private $discord_tag;
 
@@ -69,7 +65,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="owners")
      * @ORM\JoinTable(name="player_owns_gameonplatform")
      * @Groups({"player"})
-     * @Groups({"players"})
      */
     private $owned_games;
 
@@ -77,7 +72,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="players")
      * @ORM\JoinTable(name="player_wantstoplay_gameonplatform")
      * @Groups({"player"})
-     * @Groups({"players"})
      */
     private $wants_to_play;
 
