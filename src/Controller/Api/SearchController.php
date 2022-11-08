@@ -29,7 +29,7 @@ class SearchController extends AbstractController
         // Recherche de joueurs
         $players = $playerRepository->searchPlayers([
             'nickname' => $term,
-            'discord_tag' => $term
+            // 'discord_tag' => $term
         ]);
 
         // Recherche de jeux
