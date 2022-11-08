@@ -175,25 +175,20 @@ class PlayerController extends AbstractController
         $form = $this->createForm(PlayerType::class, $player);
         $form->handleRequest($request);
 
-        dd($form->isSubmitted());
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // le form a "peuplé" l'entité depuis la requête
-            // donc le $user contient son mot de passe en clair...
-
             // on hâche le mot de passe
             $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
             // on écrase le mot de passe dans le User
             $player->setPassword($hashedPassword);
 
             $playerRepository->add($player, true);
-
-            return $this->json(
-                $player,
-                Response::HTTP_CREATED,
-                [],
-                ['groups' => 'player']
-            );
         }
+        return $this->json(
+            $player,
+            Response::HTTP_CREATED,
+            [],
+            ['groups' => 'player']
+        );
     }
 }

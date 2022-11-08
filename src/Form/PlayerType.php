@@ -27,10 +27,10 @@ class PlayerType extends AbstractType
                 ],
                 'help' => 'Minimum eight and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character in @$!%*?&'
             ])
-            // ->add('available')
+            
             ->add('discord_tag', TextType::class)
-            // ->add('owned_games')
-            // ->add('wants_to_play')
+            
+            
         ;
     }
 
