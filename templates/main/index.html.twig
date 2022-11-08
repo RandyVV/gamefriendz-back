@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil{% endblock %}
+
+{% block body %}
+<style>
+
+</style>      
+
+<div class="x">
+    <h1>Back-Office GameFriendZ :)</h1>
+    <a class="links" href="{{ path('app_backoffice_game_index') }}">Jeux</a>
+    <a class="links" href="{{ path('app_backoffice_platform_index') }}">Plateformes</a>
+</div>
+{% endblock %}
