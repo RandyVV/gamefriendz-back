@@ -22,6 +22,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"player"})
+     * @Groups({"players"})
      * @Groups({"players_public"})
      */
     private $id;
