@@ -18,12 +18,10 @@ class AuthenticationSuccessListener
 
         $data['data'] = array(
             'id' => $user->getId(),
-            'username' => $user->getUserIdentifier(),
+            'email' => $user->getEmail(),
             'nickname' => $user->getNickName(),
             'available' => $user->isAvailable(),
-            'discord_tag' => $user->getDiscordTag(),
-            'owned_games' => $user->getOwnedGames(),
-            'wants_to_play' => $user->getWantsToPlay(),
+            'discord_tag' => $user->getDiscordTag()
         );
 
         $event->setData($data);
