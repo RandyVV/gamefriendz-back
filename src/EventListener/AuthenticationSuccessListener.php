@@ -1,0 +1,29 @@
+<?php
+
+namespace App\EventListener;
+
+use Symfony\Component\Security\Core\User\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
+
+class AuthenticationSuccessListener
+{
+    public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
+    {
+        $data = $event->getData();
+        $user = $event->getUser();
+
+        if (!$user instanceof UserInterface) {
+            return;
+        }
+
+        $data['data'] = array(
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'nickname' => $user->getNickName(),
+            'available' => $user->isAvailable(),
+            'discord_tag' => $user->getDiscordTag()
+        );
+
+        $event->setData($data);
+    }
+}

@@ -216,4 +216,13 @@ class PlayerController extends AbstractController
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
+
+    /**
+     * @Route("/api/player/current", name="api_player_current", methods={"GET"})
+     */
+
+     public function getCurrent()
+     {
+        
+     }
 }
