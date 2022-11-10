@@ -3,8 +3,8 @@
 {% block title %}Jeux{% endblock %}
 
 {% block body %}
-
-    <h1>Jeux</h1>
+<div class="PageGames">
+    <h1 class="Pageh1">Jeux</h1>
 
     <table class="table">
         <thead>
@@ -26,8 +26,8 @@
                 <td>{{ game.hasMultiplayerMode ? 'oui' : 'non' }}</td>
                 <td> <img src={{ game.picture }}></td>
                 <td>
-                    <a class="links" href="{{ path('app_backoffice_game_show', {'id': game.id}) }}">En voir plus</a>
-                    <a class="links" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
+                    <a class="linksGame" href="{{ path('app_backoffice_game_show', {'id': game.id}) }}">En voir plus</a>
+                    <a class="linksGame" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -38,6 +38,7 @@
         </tbody>
     </table>
 
-    <a class="link" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
-    <a class="LINK" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
+    <a class="footer" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+</div>
 {% endblock %}

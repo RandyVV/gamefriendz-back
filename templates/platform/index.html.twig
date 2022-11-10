@@ -3,7 +3,8 @@
 {% block title %}Liste des plateformes{% endblock %}
 
 {% block body %}
-    <h1>Liste des plateformes</h1>
+<div class="PagePlatforms">
+    <h1 class="Pageh1">Liste des plateformes</h1>
 
     <table class="table">
         <thead>
@@ -19,8 +20,8 @@
                 <td>{{ platform.id }}</td>
                 <td>{{ platform.name }}</td>
                 <td>
-                    <a href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
-                    <a href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
+                    <a class="linksPlatform" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
+                    <a class="linksPlatform" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -31,6 +32,8 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
-    <a class="LINK" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
+    <a class="footer" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+</div>
 {% endblock %}
+
