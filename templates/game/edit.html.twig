@@ -3,11 +3,13 @@
 {% block title %}Modifier{% endblock %}
 
 {% block body %}
-    <h1>Modifier Jeu</h1>
+<div class="PageEditNew">
+    <h1 class="Pageh1">Modifier {{ game.title }}</h1>
 
     {{ include('game/_form.html.twig', {'button_label': 'Modifier'}) }}
-
+    
     <a href="{{ path('app_backoffice_game_index') }}">Retour à la liste</a>
 
     {{ include('game/_delete_form.html.twig') }}
+</div>
 {% endblock %}
