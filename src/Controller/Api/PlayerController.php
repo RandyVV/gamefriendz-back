@@ -130,7 +130,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/removewantstotlay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
+     * @Route("/api/players/{id}/removewantstoplay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
      */
     public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
