@@ -105,7 +105,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/removeownedgames", methods={"POST"}, name="api_players_single_remove_ownedgame")
+     * @Route("/api/players/{id}/removeownedgames", methods={"DELETE"}, name="api_players_single_remove_ownedgame")
      */
     public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
@@ -130,7 +130,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/removewantstoplay", methods={"POST"}, name="api_players_single_remove_wantstoplay")
+     * @Route("/api/players/{id}/removewantstoplay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
      */
     public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
