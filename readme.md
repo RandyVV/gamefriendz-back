@@ -6,12 +6,12 @@
 composer create-project symfony/website-skeleton my-project
 
 - Utiliser la commande composer install
+- Créer la base de donnée gamefriendz
 
 ## Récupération du code
 
 - Faire un git pull depuis la branche Dev
-- créer la base de donnée gamefriendz
 - Utiliser la commande:
-bin/console make:migrations:migrate
+bin/console doctrine:migrations:migrate
 - Utiliser la commande:
 php bin/console doctrine:fixtures:load
