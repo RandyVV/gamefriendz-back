@@ -7,6 +7,7 @@ use App\Form\PlayerType;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GameOnPlatformRepository;
+use App\Security\Voter\PlayerVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,6 +60,11 @@ class PlayerController extends AbstractController
      */
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
+
+        // Seul l'utilisateur du compte doit pouvoir la modifier
+        // 1 : $attribute, 2 : $subject => Voter supports()
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
 
@@ -84,6 +90,8 @@ class PlayerController extends AbstractController
      */
     public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
 
@@ -109,6 +117,8 @@ class PlayerController extends AbstractController
      */
     public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
 
@@ -134,6 +144,8 @@ class PlayerController extends AbstractController
      */
     public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
         // On met dans une variable le contenu de la requete post sous forme de tableau
         $postData = $request->toArray();
 
@@ -216,13 +228,4 @@ class PlayerController extends AbstractController
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
-
-    /**
-     * @Route("/api/player/current", name="api_player_current", methods={"GET"})
-     */
-
-     public function getCurrent()
-     {
-        
-     }
 }
