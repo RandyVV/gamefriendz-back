@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('app_backoffice_platform_delete', {'id': platform.id}) }}" onsubmit="return confirm
+('Es-tu sûr de vouloir supprimer cette console de la base de données ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ platform.id) }}">
+    <button class="btn">supprimer</button>
+</form>

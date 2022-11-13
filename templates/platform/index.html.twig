@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des plateformes{% endblock %}
+
+{% block body %}
+<div class="PagePlatforms">
+    <h1 class="Pageh1">Liste des plateformes</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Nom</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for platform in platforms %}
+            <tr>
+                <td>{{ platform.id }}</td>
+                <td>{{ platform.name }}</td>
+                <td>
+                    <a class="linksPlatform" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
+                    <a class="linksPlatform" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucune plateforme enregistrée, </td><a href="{{ path('app_backoffice_platform_new') }}">ajoute-en une nouvelle !</a>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="footer" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
+    <a class="footer" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+</div>
+{% endblock %}
+

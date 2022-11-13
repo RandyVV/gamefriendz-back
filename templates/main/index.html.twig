@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil{% endblock %}
+
+{% block body %}
+<div class="main">
+    <h1 class="h1main">Back-Office GameFriendZ</h1>
+    <div class="HomeLinks">
+        <a class="homelink" href="{{ path('app_backoffice_game_index') }}">Jeux</a>
+        <a class="homelink" href="{{ path('app_backoffice_platform_index') }}">Plateformes</a>
+        <a class="homelink" href="{{ path('app_backoffice_main') }}">Retour à la page d'accueil Front-Office</a>
+        <a class="homelink" href="{{ path('app_backoffice_logout') }}">Déconnexion</a>
+    </div>
+</div>
+{% endblock %}
