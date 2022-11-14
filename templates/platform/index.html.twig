@@ -20,8 +20,8 @@
                 <td>{{ platform.id }}</td>
                 <td>{{ platform.name }}</td>
                 <td>
-                    <a class="linksPlatform btn btn-primary" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
-                    <a class="linksPlatform btn btn-primary" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
+                    <a class="linksPlatform btn btnn btn-primary" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
+                    <a class="linksPlatform btn btnn btn-primary" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -32,8 +32,8 @@
         </tbody>
     </table>
 
-    <a class="footer btn btn-primary" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
-    <a class="footer btn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
 </div>
 {% endblock %}
 
