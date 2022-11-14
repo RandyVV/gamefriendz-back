@@ -31,10 +31,10 @@
         </tbody>
     </table>
 
-    <a class="btn btn-primary" href="{{ path('app_backoffice_game_index') }}">Retour à la liste des jeux</a>
+    <a class="btn btnn btn-primary" href="{{ path('app_backoffice_game_index') }}">Retour à la liste des jeux</a>
 
-    <a class="btn btn-primary" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
+    <a class="btn btnn btn-primary" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
 
-    <h2 class="btn btn-primary">{{ include('game/_delete_form.html.twig') }}</h2>
+    {{ include('game/_delete_form.html.twig') }}
 </div>
 {% endblock %}
