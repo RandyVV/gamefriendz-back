@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlatformController extends AbstractController
 {
     /**
-     * @Route("/backoffice/platforms", name="app_backoffice_platform_index", methods={"GET"})
+     * @Route("/", name="app_backoffice_platform_index", methods={"GET"})
      */
     public function index(PlatformRepository $platformRepository): Response
     {
@@ -26,7 +26,7 @@ class PlatformController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/platforms/new", name="app_backoffice_platform_new", methods={"GET", "POST"})
+     * @Route("/new", name="app_backoffice_platform_new", methods={"GET", "POST"})
      */
     public function new(Request $request, PlatformRepository $platformRepository): Response
     {
