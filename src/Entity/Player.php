@@ -79,6 +79,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\ManyToMany(targetEntity=GameOnPlatform::class, inversedBy="players")
      * @ORM\JoinTable(name="player_wantstoplay_gameonplatform")
+     * @Groups({"player"})
      */
     private $wants_to_play;
 
