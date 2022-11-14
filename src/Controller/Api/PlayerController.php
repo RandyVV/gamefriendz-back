@@ -18,8 +18,44 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class PlayerController extends AbstractController
 {
+
     /**
-     * @Route("/api/players", name="api_players")
+     * @Route("/api/players", name="api_players_new", methods={"POST"})
+     */
+    public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $player = new Player();
+        $form = $this->createForm(PlayerType::class, $player, ['csrf_protection' => false]);
+
+        $jsonContent = $request->getContent();
+        $requestData = json_decode($jsonContent, true);
+
+        $form->submit($requestData);
+
+        if ($form->isValid()) {
+            // on hâche le mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
+            // on écrase le mot de passe dans le User
+            $player->setPassword($hashedPassword);
+
+            $playerRepository->add($player, true);
+
+            return $this->json(
+                $player,
+                Response::HTTP_CREATED,
+                [],
+                ['groups' => 'authenticate']
+            );
+        }
+
+        return $this->json(
+            ['errors' => $form->getErrors()],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    /**
+     * @Route("/api/players", name="api_players", methods={"GET"})
      */
     public function getCollection(PlayerRepository $playerRepository): JsonResponse
     {
@@ -32,7 +68,6 @@ class PlayerController extends AbstractController
             ['groups' => 'player']
         );
     }
-
 
     /**
      * Get Item
@@ -53,7 +88,6 @@ class PlayerController extends AbstractController
             ['groups' => 'player']
         );
     }
-
 
     /**
      * @Route("/api/players/{id}/addownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
@@ -191,41 +225,6 @@ class PlayerController extends AbstractController
             Response::HTTP_OK,
             [],
             ['groups' => 'players']
-        );
-    }
-
-    /**
-     * @Route("/api/players", name="api_players", methods={"POST"})
-     */
-    public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
-    {
-        $player = new Player();
-        $form = $this->createForm(PlayerType::class, $player, ['csrf_protection' => false]);
-
-        $jsonContent = $request->getContent();
-        $requestData = json_decode($jsonContent, true);
-
-        $form->submit($requestData);
-
-        if ($form->isValid()) {
-            // on hâche le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
-            // on écrase le mot de passe dans le User
-            $player->setPassword($hashedPassword);
-
-            $playerRepository->add($player, true);
-
-            return $this->json(
-                $player,
-                Response::HTTP_CREATED,
-                [],
-                ['groups' => 'authenticate']
-            );
-        }
-
-        return $this->json(
-            ['errors' => $form->getErrors()],
-            Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 }
