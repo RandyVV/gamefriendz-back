@@ -19,7 +19,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class PlayerController extends AbstractController
 {
     /**
-     * @Route("/api/players", name="api_players")
+     * @Route("/api/players", name="api_players", methods={"GET"}))
      */
     public function getCollection(PlayerRepository $playerRepository): JsonResponse
     {
@@ -195,7 +195,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/new/player", name="api_new_player", methods={"GET", "POST"})
+     * @Route("/api/players", name="api_new_player", methods={"POST"})
      */
     public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
