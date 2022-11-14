@@ -195,7 +195,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players", name="api_new_player", methods={"POST"})
+     * @Route("/api/players", name="api_players", methods={"POST"})
      */
     public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
