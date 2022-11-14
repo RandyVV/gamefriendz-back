@@ -46,7 +46,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/backoffice, roles: ROLE_ADMIN }
+        - { path: ^/backoffice/, roles: ROLE_ADMIN }
         - { path: ^/api/players/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
