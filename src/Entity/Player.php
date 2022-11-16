@@ -41,6 +41,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
      */
     private $email;
 
