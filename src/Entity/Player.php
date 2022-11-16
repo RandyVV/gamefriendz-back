@@ -34,6 +34,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"players"})
      * @Groups({"players_public"})
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
      */
     private $nickname;
 
@@ -58,6 +59,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      * @Groups({"players"})
      * @Groups({"players_public"})
+     * @Groups({"player_update"})
      */
     private $available = false;
 
@@ -66,6 +68,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      * @Groups({"players"})
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
      */
     private $discord_tag;
 
