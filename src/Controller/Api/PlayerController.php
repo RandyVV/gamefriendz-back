@@ -239,12 +239,15 @@ class PlayerController extends AbstractController
 
         $requestData = json_decode($jsonContent, true);
 
-        $form->submit($requestData);
+        $form->submit($requestData, false);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
-            // on écrase le mot de passe dans le User
-            $player->setPassword($hashedPassword);
+            if (key_exists('password', $requestData)) {
+                $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
+                // on écrase le mot de passe dans le User
+                $player->setPassword($hashedPassword);
+            }
+
             $em->persist($player);
             $em->flush();
 
