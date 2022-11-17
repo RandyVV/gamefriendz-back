@@ -1,4 +1,76 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Ajouter') }}</button>
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.has_multiplayer_mode) }}
+    {{ form_row(form.picture) }}
+    
+    <fieldset class="mb-3">
+        {% set uniqid = uniqueId() %}
+        {{ form_label(form.releases) }}
+
+        <ul id="{{ uniqid }}-list" class="list-group mb-3">
+            {% for releaseField in form.releases %}
+                <li class="list-group-item bg-light bg-opacity-75">
+                    {{ form_row(releaseField) }}
+                    <div class="mb-2 text-end">
+                        <button class="btn btn-danger {{ uniqid }}-remove" type="button">
+                            Supprimer
+                        </button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-end">
+            <button id="{{ uniqid }}-add" class="btn btn-secondary" type="button">
+                Ajouter une plate-forme
+            </button>
+        </div>
+
+        <template id="{{ uniqid }}-template">
+            <li class="list-group-item bg-light bg-opacity-75">
+                {{ form_row(form.releases.vars.prototype) }}
+                <div class="mb-2 text-end">
+                    <button class="btn btn-danger {{ uniqid }}-remove" type="button">
+                        Supprimer
+                    </button>
+                </div>
+            </li>
+        </template>
+
+        <script async data-uniqid="{{ uniqid }}">
+            (function () {
+                const uniqid = document.currentScript.dataset.uniqid;
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const releasesList = document.getElementById(uniqid + '-list');
+                    const releaseAddBtn = document.getElementById(uniqid + '-add');
+                    const releaseTemplate = document.getElementById(uniqid + '-template');
+                    const removeClass = uniqid + '-remove';
+
+                    releaseAddBtn.addEventListener('click', function () {
+                        const htmlTemplate = releaseTemplate.innerHTML;
+                        const newReleaseIndex = releasesList.children.length;
+                        const newReleaseHtml = htmlTemplate.replace(/__name__/g, newReleaseIndex);
+
+                        releasesList.insertAdjacentHTML('beforeend', newReleaseHtml);
+                    });
+
+                    document.addEventListener('click', function (event) {
+                        const target = event.target;
+                        if (!target.classList.contains(removeClass)) {
+                            return;
+                        }
+
+                        const subForm = target.closest('li');
+                        if (subForm) {
+                            subForm.remove();
+                        }
+                    });
+                });
+            }());
+        </script>
+    </fieldset>
+
+    {{ form_row(form.submit) }}
 {{ form_end(form) }}
