@@ -15,3 +15,8 @@ composer create-project symfony/website-skeleton my-project
 bin/console doctrine:migrations:migrate
 - Utiliser la commande:
 php bin/console doctrine:fixtures:load
+
+## Générer le token JWT
+
+- Utiliser la commande:
+php bin/console lexik:jwt:generate-keypair
