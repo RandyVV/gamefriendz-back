@@ -38,6 +38,15 @@ class Platform
      */
     private $supportedGames;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"platforms"})
+     * @Groups({"game"})
+     * @Groups({"player"})
+     * @Groups({"games"})
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->supportedGames = new ArrayCollection();
@@ -86,6 +95,18 @@ class Platform
                 $supportedGame->setPlatform(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
