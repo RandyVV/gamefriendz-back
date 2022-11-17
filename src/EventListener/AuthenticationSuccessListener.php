@@ -16,13 +16,14 @@ class AuthenticationSuccessListener
             return;
         }
 
-        $data['data'] = array(
+        $data['data'] = [
             'id' => $user->getId(),
             'email' => $user->getEmail(),
             'nickname' => $user->getNickName(),
             'available' => $user->isAvailable(),
-            'discord_tag' => $user->getDiscordTag()
-        );
+            'discord_tag' => $user->getDiscordTag(),
+            'roles' => $user->getRoles()
+        ];
 
         $event->setData($data);
     }
