@@ -10,6 +10,8 @@ class AuthenticationSuccessListener
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
     {
         $data = $event->getData();
+
+        /** @var \App\Entity\Player */
         $user = $event->getUser();
 
         if (!$user instanceof UserInterface) {
