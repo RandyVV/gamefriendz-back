@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/backoffice/games")
@@ -28,13 +29,33 @@ class GameController extends AbstractController
     /**
      * @Route("/new", name="app_backoffice_game_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, GameRepository $gameRepository): Response
+    public function new(Request $request, GameRepository $gameRepository, SluggerInterface $slugger): Response
     {
         $game = new Game();
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $pictureFile = $form->get('picture')->getData();
+            if ($pictureFile) {
+                $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $formattedFilename = $slugger->slug($originalFilename);
+                $newFilename = uniqid($formattedFilename) . '.' . $pictureFile->guessExtension();
+
+                $pictureFile->move(
+                    $this->getParameter('game_pictures_directory'),
+                    $newFilename
+                );
+
+                $pictureUrl = $request->getUriForPath(
+                    $this->getParameter('game_pictures_directory_url_path') . $newFilename
+                );
+
+                $game->setPicture($pictureUrl);
+            }
+
             $gameRepository->add($game, true);
 
             return $this->redirectToRoute('app_backoffice_game_index', [], Response::HTTP_SEE_OTHER);
@@ -59,12 +80,32 @@ class GameController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Game $game, GameRepository $gameRepository): Response
+    public function edit(Request $request, Game $game, GameRepository $gameRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(GameType::class, $game);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $pictureFile = $form->get('picture')->getData();
+            if ($pictureFile) {
+                $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $formattedFilename = $slugger->slug($originalFilename);
+                $newFilename = uniqid($formattedFilename) . '.' . $pictureFile->guessExtension();
+
+                $pictureFile->move(
+                    $this->getParameter('game_pictures_directory'),
+                    $newFilename
+                );
+
+                $pictureUrl = $request->getUriForPath(
+                    $this->getParameter('game_pictures_directory_url_path') . $newFilename
+                );
+
+                $game->setPicture($pictureUrl);
+            }
+
             $gameRepository->add($game, true);
 
             return $this->redirectToRoute('app_backoffice_game_index', [], Response::HTTP_SEE_OTHER);

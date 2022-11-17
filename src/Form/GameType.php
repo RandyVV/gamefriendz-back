@@ -6,12 +6,13 @@ use App\Entity\Game;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class GameType extends AbstractType
 {
@@ -28,10 +29,21 @@ class GameType extends AbstractType
                 ]
             ])
             ->add('has_multiplayer_mode', CheckboxType::class, [
-                'label' => 'Jeu multi-joueur'
+                'label' => 'Jeu multi-joueur',
+                'required' => false
             ])
-            ->add('picture', UrlType::class, [
-                'label' => 'Image de couverture'
+            ->add('picture', FileType::class, [
+                'label' => 'Image de couverture',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => new File([
+                    'maxSize' => '1024k',
+                    'mimeTypes' => [
+                        'image/png',
+                        'image/jpg', 'image/jpeg',
+                        'image/webp'
+                    ]
+                ])
             ])
             ->add('releases', CollectionType::class, [
                 'label' => 'Plates-formes',
