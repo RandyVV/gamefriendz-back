@@ -6,6 +6,9 @@
 <div class="PageGames">
     <h1 class="Pageh1">Jeux</h1>
 
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
+
     <table class="table">
         <thead>
             <tr>
@@ -38,7 +41,6 @@
         </tbody>
     </table>
 
-    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
     <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
 </div>
 {% endblock %}
