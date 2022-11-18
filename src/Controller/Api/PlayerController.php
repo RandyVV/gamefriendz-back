@@ -227,7 +227,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}", name="api_players_single_update", methods={"PUT"})
+     * @Route("/api/players/{id}", name="api_players_single_update", methods={"PUT", "PATCH"})
      */
     public function updatePlayer(Player $player, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
     {
@@ -239,7 +239,9 @@ class PlayerController extends AbstractController
 
         $requestData = json_decode($jsonContent, true);
 
-        $form->submit($requestData, false);
+        $requireAllFields = ($request->getMethod() === Request::METHOD_PUT);
+
+        $form->submit($requestData, $requireAllFields);
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (key_exists('password', $requestData)) {
