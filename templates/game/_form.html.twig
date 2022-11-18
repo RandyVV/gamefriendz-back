@@ -1,4 +1,4 @@
-{{ form_start(form) }}
+ {{ form_start(form) }}
     {{ form_row(form.title) }}
     {{ form_row(form.description) }}
     {{ form_row(form.has_multiplayer_mode) }}
@@ -48,12 +48,15 @@
                     const releaseTemplate = document.getElementById(uniqid + '-template');
                     const removeClass = uniqid + '-remove';
 
+                    let counter = releasesList.children.length;
+
                     releaseAddBtn.addEventListener('click', function () {
                         const htmlTemplate = releaseTemplate.innerHTML;
-                        const newReleaseIndex = releasesList.children.length;
+                        const newReleaseIndex = counter;
                         const newReleaseHtml = htmlTemplate.replace(/__name__/g, newReleaseIndex);
 
                         releasesList.insertAdjacentHTML('beforeend', newReleaseHtml);
+                        counter++;
                     });
 
                     document.addEventListener('click', function (event) {
