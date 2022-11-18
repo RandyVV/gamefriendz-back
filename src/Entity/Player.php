@@ -89,6 +89,15 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     private $wants_to_play;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"player"})
+     * @Groups({"players"})
+     * @Groups({"players_public"})
+     * @Groups({"player_update"})
+     */
+    private $avatar;
+
+    /**
      * The public representation of the user (e.g. a username, an email address, etc.)
      *
      * @see UserInterface
@@ -260,5 +269,17 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
     }
 }

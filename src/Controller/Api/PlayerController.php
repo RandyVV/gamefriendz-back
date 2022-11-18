@@ -4,14 +4,16 @@ namespace App\Controller\Api;
 
 use App\Entity\Player;
 use App\Form\PlayerType;
+use App\Form\PlayerAvatarType;
+use App\Security\Voter\PlayerVoter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GameOnPlatformRepository;
-use App\Security\Voter\PlayerVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -288,6 +290,54 @@ class PlayerController extends AbstractController
             Response::HTTP_OK,
             [],
             ['groups' => 'player_update']
+        );
+    }
+
+    /**
+     * @Route("/api/players/{id}/avatar", name="api_players_single_update_avatar", methods={"POST"})
+     */
+    public function updatePlayerAvatar(Player $player, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
+        $form = $this->createForm(PlayerAvatarType::class, $player, ['csrf_protection' => false]);
+
+        $form->submit($request->files->all());
+
+        if ($form->isValid()) {
+            
+            /** @var Symfony\Component\HttpFoundation\UploadedFile $pictureFile */
+            $pictureFile = $form->get('avatar')->getData();
+            
+            $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+            $formattedFilename = $slugger->slug($originalFilename);
+            $newFilename = uniqid($formattedFilename) . '.' . $pictureFile->guessExtension();
+
+            $pictureFile->move(
+                $this->getParameter('avatar_pictures_directory'),
+                $newFilename
+            );
+
+            $pictureUrl = $request->getUriForPath(
+                $this->getParameter('avatar_pictures_directory_url_path') . $newFilename
+            );
+
+            $player->setAvatar($pictureUrl);
+            $em->persist($player);
+            $em->flush();
+
+            return $this->json(
+                $player,
+                Response::HTTP_CREATED,
+                [],
+                ['groups' => 'player_update']
+            );
+        }
+
+        return $this->json(
+            ['errors' => $form->getErrors()],
+            Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 }
