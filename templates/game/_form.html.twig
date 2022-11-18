@@ -73,6 +73,8 @@
                 });
             }());
         </script>
+
+        {% do form.releases.setRendered %}
     </fieldset>
 
     {{ form_row(form.submit) }}
