@@ -37,7 +37,7 @@ class GameType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => new File([
-                    'maxSize' => '1024k',
+                    'maxSize' => '2048k',
                     'mimeTypes' => [
                         'image/png',
                         'image/jpg', 'image/jpeg',
