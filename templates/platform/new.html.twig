@@ -8,6 +8,8 @@
 
     {{ include('platform/_form.html.twig') }}
 
-    <a href="{{ path('app_backoffice_platform_index') }}">Retour à la liste</a>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-secondary mx-1" href="{{ path('app_backoffice_platform_index') }}">Retour à la liste</a>
+    </div>
 </div>
 {% endblock %}
