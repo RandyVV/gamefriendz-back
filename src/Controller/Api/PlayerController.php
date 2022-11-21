@@ -4,14 +4,16 @@ namespace App\Controller\Api;
 
 use App\Entity\Player;
 use App\Form\PlayerType;
+use App\Form\PlayerAvatarType;
+use App\Security\Voter\PlayerVoter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GameOnPlatformRepository;
-use App\Security\Voter\PlayerVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -19,7 +21,42 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class PlayerController extends AbstractController
 {
     /**
-     * @Route("/api/players", name="api_players")
+     * @Route("/api/players", name="api_players_new", methods={"POST"})
+     */
+    public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        $player = new Player();
+        $form = $this->createForm(PlayerType::class, $player, ['csrf_protection' => false]);
+
+        $jsonContent = $request->getContent();
+        $requestData = json_decode($jsonContent, true);
+
+        $form->submit($requestData);
+
+        if ($form->isValid()) {
+            // on hâche le mot de passe
+            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
+            // on écrase le mot de passe dans le User
+            $player->setPassword($hashedPassword);
+
+            $playerRepository->add($player, true);
+
+            return $this->json(
+                $player,
+                Response::HTTP_CREATED,
+                [],
+                ['groups' => 'authenticate']
+            );
+        }
+
+        return $this->json(
+            ['errors' => $form->getErrors()],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    /**
+     * @Route("/api/players", name="api_players", methods={"GET"})
      */
     public function getCollection(PlayerRepository $playerRepository): JsonResponse
     {
@@ -33,10 +70,9 @@ class PlayerController extends AbstractController
         );
     }
 
-
     /**
      * Get Item
-     * 
+     *
      * @Route("/api/players/{id}", name="app_api_players_get_item", methods={"GET"})
      */
     public function getItem(Player $player = null): JsonResponse
@@ -54,13 +90,11 @@ class PlayerController extends AbstractController
         );
     }
 
-
     /**
-     * @Route("/api/players/{id}/addownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
+     * @Route("/api/players/{id}/ownedgames", methods={"POST"}, name="api_players_single_add_ownedgame")
      */
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
-
         // Seul l'utilisateur du compte doit pouvoir la modifier
         // 1 : $attribute, 2 : $subject => Voter supports()
         $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
@@ -86,7 +120,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/addwantstoplay", methods={"POST"}, name="api_players_single_add_wantstoplay")
+     * @Route("/api/players/{id}/wantstoplay", methods={"POST"}, name="api_players_single_add_wantstoplay")
      */
     public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
@@ -113,7 +147,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/removeownedgames", methods={"DELETE"}, name="api_players_single_remove_ownedgame")
+     * @Route("/api/players/{id}/ownedgames", methods={"DELETE"}, name="api_players_single_remove_ownedgame")
      */
     public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
@@ -140,7 +174,7 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/players/{id}/removewantstoplay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
+     * @Route("/api/players/{id}/wantstoplay", methods={"DELETE"}, name="api_players_single_remove_wantstoplay")
      */
     public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em)
     {
@@ -168,11 +202,11 @@ class PlayerController extends AbstractController
 
     /**
      * Search items
-     * 
+     *
      * Critères de recherche supportés :
      *  nickname : recherche par pseudo
      *  discord_tag : recherche par le tag discord d'un joueur
-     * 
+     *
      * @Route("/api/players/search", name="api_players_search", methods={"POST"})
      */
     public function searchItems(PlayerRepository $playerRepository, Request $request): JsonResponse
@@ -195,31 +229,109 @@ class PlayerController extends AbstractController
     }
 
     /**
-     * @Route("/api/new/player", name="api_new_player", methods={"GET", "POST"})
+     * @Route("/api/players/{id}", name="api_players_single_update", methods={"PUT", "PATCH"})
      */
-    public function new(Request $request, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function updatePlayer(Player $player, Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): Response
     {
-        $player = new Player();
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
         $form = $this->createForm(PlayerType::class, $player, ['csrf_protection' => false]);
 
         $jsonContent = $request->getContent();
+
         $requestData = json_decode($jsonContent, true);
 
-        $form->submit($requestData);
+        $requireAllFields = ($request->getMethod() === Request::METHOD_PUT);
+
+        $form->submit($requestData, $requireAllFields);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if (key_exists('password', $requestData)) {
+                $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
+                // on écrase le mot de passe dans le User
+                $player->setPassword($hashedPassword);
+            }
+
+            $em->persist($player);
+            $em->flush();
+
+            return $this->json(
+                $player,
+                Response::HTTP_OK,
+                [],
+                ['groups' => 'player_update']
+            );
+        }
+
+        return $this->json(
+            ['errors' => $form->getErrors()],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    /**
+     * @Route("/api/players/{id}/available", name="api_players_single_update_available", methods={"PUT"})
+     */
+    public function updatePlayerAvailable(Player $player, Request $request, EntityManagerInterface $em)
+    {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
+        $jsonContent = $request->getContent();
+
+        $requestData = json_decode($jsonContent, true);
+
+        $player->setAvailable($requestData['available']);
+
+        $em->persist($player);
+        $em->flush();
+
+        return $this->json(
+            $player,
+            Response::HTTP_OK,
+            [],
+            ['groups' => 'player_update']
+        );
+    }
+
+    /**
+     * @Route("/api/players/{id}/avatar", name="api_players_single_update_avatar", methods={"POST"})
+     */
+    public function updatePlayerAvatar(Player $player, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
+        $form = $this->createForm(PlayerAvatarType::class, $player, ['csrf_protection' => false]);
+
+        $form->submit($request->files->all());
 
         if ($form->isValid()) {
-            // on hâche le mot de passe
-            $hashedPassword = $passwordHasher->hashPassword($player, $player->getPassword());
-            // on écrase le mot de passe dans le User
-            $player->setPassword($hashedPassword);
+            
+            /** @var Symfony\Component\HttpFoundation\UploadedFile $pictureFile */
+            $pictureFile = $form->get('avatar')->getData();
+            
+            $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
 
-            $playerRepository->add($player, true);
+            $formattedFilename = $slugger->slug($originalFilename);
+            $newFilename = uniqid($formattedFilename) . '.' . $pictureFile->guessExtension();
+
+            $pictureFile->move(
+                $this->getParameter('avatar_pictures_directory'),
+                $newFilename
+            );
+
+            $pictureUrl = $request->getUriForPath(
+                $this->getParameter('avatar_pictures_directory_url_path') . $newFilename
+            );
+
+            $player->setAvatar($pictureUrl);
+            $em->persist($player);
+            $em->flush();
 
             return $this->json(
                 $player,
                 Response::HTTP_CREATED,
                 [],
-                ['groups' => 'authenticate']
+                ['groups' => 'player_update']
             );
         }
 

@@ -71,24 +71,31 @@ App\Entity\Platform:
 
     platform_1:
         name: Playstation 4
+        slug: ps-4
 
     platform_2:
         name: Playstation 5
+        slug: ps-5
 
     platform_3:
         name: Nintendo Switch
+        slug: nintendo-switch
 
     platform_4:
         name: PC
+        slug: windows
 
     platform_5:
         name: Mobile
+        slug: mobile
 
     platform_6:
         name: Xbox One
+        slug: xbox-one
 
     platform_7:
         name: Xbox Series X
+        slug: xbox-x
 
 
 App\Entity\GameOnPlatform:

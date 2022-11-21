@@ -34,12 +34,15 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"players"})
      * @Groups({"players_public"})
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
      */
     private $nickname;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
+     * @Groups({"player"})
      */
     private $email;
 
@@ -50,7 +53,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"authenticate"})
      */
     private $password;
 
@@ -59,6 +61,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      * @Groups({"players"})
      * @Groups({"players_public"})
+     * @Groups({"player_update"})
      */
     private $available = false;
 
@@ -67,6 +70,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      * @Groups({"players"})
      * @Groups({"authenticate"})
+     * @Groups({"player_update"})
      */
     private $discord_tag;
 
@@ -83,6 +87,15 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"player"})
      */
     private $wants_to_play;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"player"})
+     * @Groups({"players"})
+     * @Groups({"players_public"})
+     * @Groups({"player_update"})
+     */
+    private $avatar;
 
     /**
      * The public representation of the user (e.g. a username, an email address, etc.)
@@ -256,5 +269,17 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
     }
 }

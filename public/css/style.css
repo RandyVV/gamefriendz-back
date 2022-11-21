@@ -12,6 +12,8 @@ a {
     color: black;
 }
 
+
+
 a:hover {
     color: rgb(167, 242, 255);
 }
@@ -19,34 +21,46 @@ a:hover {
 .h1main {
     text-align: center; 
     font-size: 5em;
-    padding-top: 4em;
+    padding-top: 3em;
     color: black;
     text-shadow: rgba(255, 255, 255, 0.219) 0 0 10px;
     font-weight: 800;
 }
 
 .homelink {
-    padding: 2em;
-    margin-left: 2em;
+    padding: 0.6em;
     font-size: 1.5em;
 }
 
 .HomeLinks {
     padding: 5em;
     margin: 2em;
+    display: flex;
+    justify-content: space-between;
 }
 
 .PageGames {
-    padding: 3em;
+    padding: 2em;
 }
 
 .PagePlatforms {
-    padding: 3em;
+    padding: 2em;
     height: 100vh;
 }
 
-.PageLogin {
+.PageEditNew {
+    background: linear-gradient(#f8bb12,#9d1ad1);
+    padding: 1em;
+    border-radius: 1em;
+}
+
+.PAGE {
     padding: 3em;
+    min-height: 100vh;
+}
+
+.PageGameinfo {
+    padding: 4em;
 }
 
 .thLike {
@@ -87,7 +101,7 @@ td {
     border-radius: 15px;
 }
 
-.linksGame { margin: 0 auto; 
+.linksGame { margin: 10px auto; 
     text-shadow: rgb(0, 0, 0) 0 0 10px;
     color: whitesmoke;
 }
@@ -99,9 +113,24 @@ td {
 }
 
 .footer { margin-right: 4em; 
-    font-size: 1.5em;
+    font-size: 1.2em;
 }
 
 img { width: 400px; 
 }
 
+.btnn {
+    background-color:rgb(29, 29, 29);
+    border: 1px solid rgb(29, 29, 29);
+    border-radius: 3px;
+    color: rgb(75, 93, 255);
+    font-weight: 500;
+    padding: 8px 25px;
+    margin-bottom: 1em;
+}
+
+.btnn:hover {
+    border: 1px solid rgb(29, 29, 29);
+    background-color: #000000;
+    color: rgb(75, 93, 255);
+}

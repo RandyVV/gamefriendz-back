@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Player;
+use Doctrine\DBAL\Types\BooleanType;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -44,9 +46,8 @@ class PlayerType extends AbstractType
                     new Regex('/^[^\s]+\#\d{4}$/i')
                 ]
             ])
-            
-            
-        ;
+            // ->add('available', BooleanType::class)
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

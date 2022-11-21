@@ -48,7 +48,7 @@ class Game
     private $has_multiplayer_mode;
 
     /**
-     * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=GameOnPlatform::class, mappedBy="game", orphanRemoval=true, cascade={"persist"})
      * @Groups({"game"})
      * @Groups({"games"})
      */

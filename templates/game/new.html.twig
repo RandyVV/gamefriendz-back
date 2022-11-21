@@ -3,9 +3,13 @@
 {% block title %}Ajouter un jeu{% endblock %}
 
 {% block body %}
+<div class="PageEditNew">
     <h1>Ajouter un jeu</h1>
 
     {{ include('game/_form.html.twig') }}
 
-    <a href="{{ path('app_backoffice_game_index') }}">back to list</a>
+    <div class="d-flex justify-content-end">
+        <a class="btn btn-secondary mx-1" href="{{ path('app_backoffice_game_index') }}">Retour à la liste</a>
+    </div>
+</div>
 {% endblock %}

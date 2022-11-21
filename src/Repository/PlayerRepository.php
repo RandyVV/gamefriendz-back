@@ -19,6 +19,27 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class PlayerRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    /**
+     * Liste des méthode qui permettent de configurer le query
+     * builder par critère de recherche textuel
+     */
+    private static $textSearchCriteriasConfigure = [
+        'nickname' => 'configureNicknameSearchCriteria',
+        'discord_tag' => 'configureDiscordTagSearchCriteria',
+        'game' => 'configureGameSearchCriteria'
+    ];
+
+    /**
+     * Liste des méthodes qui permettent de mettre en forme la
+     * valeur des critères de recherche textuel
+     * (par exemple passer de "poke" à "%poke%" pour un LIKE)
+     */
+    private static $searchCriteriasFormat = [
+        'nickname' => 'formatCriteriaLike',
+        'discord_tag' => 'formatCriteriaLike',
+        'game' => 'formatCriteriaLike'
+    ];
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Player::class);
@@ -59,55 +80,61 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
     // Méthode pour ajouter des critères de recherche
     public function searchPlayers(array $criterias): array
     {
+        // on crée le query builder pour une requête personnalisée
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('p');
 
-        /* RECHERCHE PAR PSEUDO, TAG DISCORD */
-        $byNickname = false;
-        $nickname = null;
-        if (key_exists('nickname', $criterias)) {
-            $byNickname = true;
-            $nickname = $criterias['nickname'];
-        }
-        
-        $byDiscordTag = false;
-        $discordTag = null;
-        if (key_exists('discord_tag', $criterias)) {
-            $byDiscordTag = true;
-            $discordTag = $criterias['discord_tag'];
-        }
-
+        /* RECHERCHE TEXTUELLE */
         /*
-        Players :
-            1 [pseudo => tartampion, discord => abc]
-            2 [pseudo => autrechose, discord => bcd]
-            3 [pseudo => tartatin, discord => xyz]
+        Tous les critères de recherche textuels se combinent :
+            si on cherche avec un pseudo et un tag Discord
+                => alors on recherche le pseudo OU le tag Discord
+            si on cherche avec pseudo, tag Discord et jeu
+                => alors on recherche le pseudo OU le tag Discord OU le titre du jeu
 
-        Recherche [pseudo => tar] => 1,3
-        Recherche [discord => bc] => 1,2
-        Recherche [pseudo => tar, discord => bc] => 1,2,3
+        Exemple :
+            nickame => bg
+            game => pokemon
+
+            On obtiendra tous les joueurs qui on "bg" dans leur pseudo
+            ou qui veulent jouer à un jeu dont le titre contient "pokemon"
         */
 
-        if ($byNickname && $byDiscordTag) {
-            // recherche par pseudo ET tag discord
-            //  => on prend les joueurs pour lesquels le pseudo OU le tag discord contiennent le terme de recherche
-            $queryBuilder->andWhere('p.nickname LIKE :nickname OR p.discord_tag LIKE :discord_tag')
-                ->setParameters([
-                    'nickname' => '%' . $nickname . '%',
-                    'discord_tag' => '%' . $discordTag . '%'
-                ]);
+        // on mettra ici les différentes conditions en fonction de chaque critère textuel
+        $textCriterias = [];
+        // on mettra ici les valeurs mises en forme qui seront données comme paramètres au QB
+        $textParameters = [];
+
+        // recherche des critères textuels => pour chaque critère à configurer...
+        foreach (self::$textSearchCriteriasConfigure as $criteria => $configMethod) {
+            // ...si le critère n'a pas été donné, on le saute
+            if (!key_exists($criteria, $criterias)) {
+                continue;
+            }
+            // ...on génère la condition DQL qui gère le critère après avoir
+            // configuré le query builder (jointures, etc.)
+            $textCriterias[] = $this->$configMethod($queryBuilder);
+            // s'il faut mettre en forme la valeur du critère pour la requête...
+            // (ex: ajouter les % pour un LIKE)
+            if (key_exists($criteria, self::$searchCriteriasFormat)) {
+                // ...on récupère le nom de la méthode qui sert à formater la valeur
+                $formatter = self::$searchCriteriasFormat[$criteria];
+                // ...on appelle la méthode pour formater la valeur et on ajoute cette
+                // valeur mise en forme aux critères qui seront passés au QB
+                $textParameters[$criteria] = $this->$formatter($criterias[$criteria]);
+            } else {
+                // s'il ne faut pas formater la valeur on l'ajoute telle quelle aux
+                // paramètres du QB
+                $textParameters[$criteria] = $criterias[$criteria];
+            }
         }
-        elseif ($byNickname) {
-            // recherche par pseudo (SANS tag discord)
-            //  => on prend les joueurs dont SEUL le pseudo contient le terme de recherche
-            $queryBuilder->andWhere('p.nickname LIKE :nickname')
-                ->setParameter('nickname', '%' . $nickname . '%');
-        }
-        elseif ($byDiscordTag) {
-            // recherche par tag discord (SANS pseudo)
-            //  => on prend les joueurs dont SEUL le tag discord contient le terme de recherche
-            $queryBuilder->andWhere('p.discord_tag LIKE :discord_tag')
-                ->setParameter('discord_tag', '%' . $discordTag . '%');
+
+        // si on a bien préparé les critères textuels
+        if (count($textCriterias) > 0) {
+            // ...on ajoute les conditions à la requêtes en les liant par des OR
+            $queryBuilder->andWhere(join(' OR ', $textCriterias))
+                // ...et on injecte les valeurs en paramètres de la requête DQL
+                ->setParameters($textParameters);
         }
 
         /* RECHERCHE PAR DISPONIBILITÉ */
@@ -127,6 +154,38 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
         
         // Avec seulement le critère "available"
         // SELECT * FROM player WHERE available = TRUE ORDER BY id ASC
+    }
+
+    private function configureNicknameSearchCriteria()
+    {
+        return 'p.nickname LIKE :nickname';
+    }
+
+    private function configureDiscordTagSearchCriteria()
+    {
+        return 'p.discord_tag LIKE :discord_tag';
+    }
+
+    /**
+     * @param \Doctrine\ORM\QueryBuilder $queryBuilder
+     */
+    private function configureGameSearchCriteria($queryBuilder)
+    {
+        // on utilise une sous-requête ici pour ne pas exclure les joueurs sans jeu
+        // comme le ferait une jointure
+        $subQueryBuilder = $this->createQueryBuilder('gsp')
+            ->join('gsp.wants_to_play', 'gsgop')
+            ->join('gsgop.game', 'gsg')
+            ->where($queryBuilder->expr()->eq('gsp.id', 'p.id'))
+            ->andWhere('gsg.title LIKE :game')
+        ;
+
+        return (string) $queryBuilder->expr()->exists($subQueryBuilder->getDQL());
+    }
+
+    private function formatCriteriaLike($value)
+    {
+        return '%' . $value . '%';
     }
     
 //    /**

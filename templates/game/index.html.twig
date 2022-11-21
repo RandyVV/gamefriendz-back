@@ -6,6 +6,9 @@
 <div class="PageGames">
     <h1 class="Pageh1">Jeux</h1>
 
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
+
     <table class="table">
         <thead>
             <tr>
@@ -26,8 +29,8 @@
                 <td>{{ game.hasMultiplayerMode ? 'oui' : 'non' }}</td>
                 <td> <img src={{ game.picture }}></td>
                 <td>
-                    <a class="linksGame" href="{{ path('app_backoffice_game_show', {'id': game.id}) }}">En voir plus</a>
-                    <a class="linksGame" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
+                    <a class="linksGame btn btnn btn-primary" href="{{ path('app_backoffice_game_show', {'id': game.id}) }}">En voir plus</a>
+                    <a class="linksGame btn btnn btn-primary" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
@@ -38,7 +41,6 @@
         </tbody>
     </table>
 
-    <a class="footer" href="{{ path('app_backoffice_game_new') }}">Ajouter un jeu</a>
-    <a class="footer" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
 </div>
 {% endblock %}

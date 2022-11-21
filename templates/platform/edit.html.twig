@@ -3,11 +3,17 @@
 {% block title %}Modifier Plateforme{% endblock %}
 
 {% block body %}
-    <h1>Modifier plateforme</h1>
+<div class="PageEditNew">
+    <h1 class="Pageh1">Modifier {{ platform.name }}</h1>
 
     {{ include('platform/_form.html.twig', {'button_label': 'Modifier'}) }}
 
-    <a href="{{ path('app_backoffice_platform_index') }}">retour à la liste des plateformes</a>
 
-    {{ include('platform/_delete_form.html.twig') }}
+    <div class="d-flex justify-content-end">
+        <div class="mx-1">
+            {{ include('platform/_delete_form.html.twig') }}
+        </div>
+        <a class="btn btn-secondary mx-1" href="{{ path('app_backoffice_platform_index') }}">Retour à la liste</a>
+    </div>
+</div>
 {% endblock %}
