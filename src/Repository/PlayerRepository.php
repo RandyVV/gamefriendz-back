@@ -171,10 +171,16 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
      */
     private function configureGameSearchCriteria($queryBuilder)
     {
-        $queryBuilder->join('p.wants_to_play', 'gop')
-            ->join('gop.game', 'g');
+        // on utilise une sous-requête ici pour ne pas exclure les joueurs sans jeu
+        // comme le ferait une jointure
+        $subQueryBuilder = $this->createQueryBuilder('gsp')
+            ->join('gsp.wants_to_play', 'gsgop')
+            ->join('gsgop.game', 'gsg')
+            ->where($queryBuilder->expr()->eq('gsp.id', 'p.id'))
+            ->andWhere('gsg.title LIKE :game')
+        ;
 
-        return 'g.title LIKE :game';
+        return (string) $queryBuilder->expr()->exists($subQueryBuilder->getDQL());
     }
 
     private function formatCriteriaLike($value)
