@@ -6,12 +6,12 @@
 <div class="PageEditNew">
     <h1 class="Pageh1">Modifier {{ platform.name }}</h1>
 
-    {{ include('platform/_form.html.twig', {'button_label': 'Modifier'}) }}
+    {{ include('BackOffice/platform/_form.html.twig', {'button_label': 'Modifier'}) }}
 
 
     <div class="d-flex justify-content-end">
         <div class="mx-1">
-            {{ include('platform/_delete_form.html.twig') }}
+            {{ include('BackOffice/platform/_delete_form.html.twig') }}
         </div>
         <a class="btn btn-secondary mx-1" href="{{ path('app_backoffice_platform_index') }}">Retour à la liste</a>
     </div>

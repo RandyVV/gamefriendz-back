@@ -3,38 +3,44 @@
 {% block title %}Fiche jeu{% endblock %}
 
 {% block body %}
-<div class="PageGameinfo">
-    <h1 class="Pageh1">{{ game.title }}</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ game.id }}</td>
-            </tr>
-            <tr>
-                <th>Titre</th>
-                <td>{{ game.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ game.description }}</td>
-            </tr>
-            <tr>
-                <th>Mode multijoueur</th>
-                <td>{{ game.hasMultiplayerMode ? 'Oui' : 'Non' }}</td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td> <img src={{ game.picture }}></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a class="btn btnn btn-primary" href="{{ path('app_backoffice_game_index') }}">Retour à la liste des jeux</a>
-
-    <a class="btn btnn btn-primary" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
-
-    {{ include('game/_delete_form.html.twig') }}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">{{ game.title }}</h1>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ game.picture }}" class="img-fluid" alt="{{ game.title }}">
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <td>{{ game.id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Titre</th>
+                                <td>{{ game.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Description</th>
+                                <td>{{ game.description }}</td>
+                            </tr>
+                            <tr>
+                                <th>Mode multijoueur</th>
+                                <td>{{ game.hasMultiplayerMode ? 'Oui' : 'Non' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a class="btn btn-primary" href="{{ path('app_backoffice_game_index') }}">Retour à la liste des jeux</a>
+                <a class="btn btn-secondary" href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}">Modifier</a>
+                {{ include('BackOffice/game/_delete_form.html.twig') }}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

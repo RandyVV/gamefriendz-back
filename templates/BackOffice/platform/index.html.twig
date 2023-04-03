@@ -1,39 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des plateformes{% endblock %}
-
-{% block body %}
-<div class="PagePlatforms">
-    <h1 class="Pageh1">Liste des plateformes</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>Nom</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for platform in platforms %}
-            <tr>
-                <td>{{ platform.id }}</td>
-                <td>{{ platform.name }}</td>
-                <td>
-                    <a class="linksPlatform btn btnn btn-primary" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
-                    <a class="linksPlatform btn btnn btn-primary" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">Aucune plateforme enregistrée, </td><a href="{{ path('app_backoffice_platform_new') }}">ajoute-en une nouvelle !</a>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
-    <a class="footer btn btnn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
-</div>
+{% block title %}Liste des plateformes
 {% endblock %}
 
+{% block body %}
+	<div class="container PagePlatforms">
+		<div class="text-center">
+			<h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Liste des plateformes</h1>
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="text-center">id</th>
+					<th class="text-center">Nom</th>
+					<th class="text-center">actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for platform in platforms %}
+					<tr>
+						<td class="text-center">{{ platform.id }}</td>
+						<td class="text-center">{{ platform.name }}</td>
+						<td class="text-center">
+							<a class="btn btn-primary" href="{{ path('app_backoffice_platform_show', {'id': platform.id}) }}">En voir plus</a>
+							<a class="btn btn-secondary" href="{{ path('app_backoffice_platform_edit', {'id': platform.id}) }}">Modifier</a>
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="3" class="text-center">Aucune plateforme enregistrée,
+						</td>
+						<a href="{{ path('app_backoffice_platform_new') }}">ajoute-en une nouvelle !</a>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div class="d-flex justify-content-between mt-3">
+			<a class="btn btn-primary" href="{{ path('app_backoffice_platform_new') }}">Ajouter une plateforme</a>
+			<a class="btn btn-primary" href="{{ path('app_backoffice_main') }}">Retour au menu</a>
+		</div>
+	</div>
+{% endblock %}

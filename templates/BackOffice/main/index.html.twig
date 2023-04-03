@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page d'accueil{% endblock %}
+{% block title %}Page d'accueil
+{% endblock %}
 
 {% block body %}
-<div class="main">
-    <h1 class="h1main">Back-Office GameFriendZ</h1>
-    <div class="HomeLinks">
-        <a class="homelink btn btnn btn-primary" href="{{ path('app_backoffice_game_index') }}">Jeux</a>
-        <a class="homelink btn btnn btn-primary" href="{{ path('app_backoffice_platform_index') }}">Plateformes</a>
-        <a class="homelink btn btnn btn-primary" href="//gamefriendz.com">Retour à la page d'accueil Front-Office</a>
-        <a class="homelink btn btnn btn-primary" href="{{ path('app_backoffice_logout') }}">Déconnexion</a>
-    </div>
-</div>
+	<div class="container mt-5">
+		<div class="text-center">
+			<h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Back-Office GameFriendZ</h1>
+		</div>
+
+		<div class="d-flex justify-content-center">
+			<div class="btn-group-vertical btn-group-lg mb-4">
+				<a class="btn btn-primary mb-2" href="{{ path('app_backoffice_game_index') }}">Jeux</a>
+				<a class="btn btn-primary mb-2" href="{{ path('app_backoffice_platform_index') }}">Plateformes</a>
+				<a class="btn btn-primary mb-2" href="//gamefriendz.com">Retour à la page d'accueil Front-Office</a>
+				<a class="btn btn-primary mb-2" href="{{ path('app_backoffice_logout') }}">Déconnexion</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}

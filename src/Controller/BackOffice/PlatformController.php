@@ -20,7 +20,7 @@ class PlatformController extends AbstractController
      */
     public function index(PlatformRepository $platformRepository): Response
     {
-        return $this->render('platform/index.html.twig', [
+        return $this->render('BackOffice/platform/index.html.twig', [
             'platforms' => $platformRepository->findAll(),
         ]);
     }
@@ -40,7 +40,7 @@ class PlatformController extends AbstractController
             return $this->redirectToRoute('app_backoffice_platform_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('platform/new.html.twig', [
+        return $this->renderForm('BackOffice/platform/new.html.twig', [
             'platform' => $platform,
             'form' => $form,
         ]);
@@ -51,7 +51,7 @@ class PlatformController extends AbstractController
      */
     public function show(Platform $platform): Response
     {
-        return $this->render('platform/show.html.twig', [
+        return $this->render('BackOffice/platform/show.html.twig', [
             'platform' => $platform,
         ]);
     }
@@ -70,7 +70,7 @@ class PlatformController extends AbstractController
             return $this->redirectToRoute('app_backoffice_platform_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('platform/edit.html.twig', [
+        return $this->renderForm('BackOffice/platform/edit.html.twig', [
             'platform' => $platform,
             'form' => $form,
         ]);
