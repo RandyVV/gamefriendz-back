@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\BackOffice;
+namespace App\Entity;
 
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
