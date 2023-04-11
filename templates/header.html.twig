@@ -25,18 +25,18 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item{% if app.request.get('_route') == 'app_player_index' %} active{% endif %}">
-            <a class="nav-link" href="{{ path('app_player_index') }}">Joueurs</a>
+          <li class="nav-item{% if app.request.get('_route') == 'homepage' %} active{% endif %}">
+            <a class="nav-link" href="{{ path('homepage') }}">Accueil</a>
           </li>
-          <li class="nav-item{% if app.request.get('_route') == 'app_game_index' %} active{% endif %}">
-            <a class="nav-link" href="{{ path('app_game_index') }}">Jeux</a>
+          <li class="nav-item{% if app.request.get('_route') == 'app_game_search' %} active{% endif %}">
+            {# <a class="nav-link" href="{{ path('app_game_search') }}">Recherche de jeux</a> #}
+          </li>
+          <li class="nav-item{% if app.request.get('_route') == 'app_player_search' %} active{% endif %}">
+            <a class="nav-link" href="{{ path('app_player_search') }}">Recherche de joueurs</a>
           </li>
         </ul>
         {% if app.user %}
           <ul class="navbar-nav">
-            <li class="nav-item">
-              {{ app.user.username }}
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
             </li>
@@ -46,9 +46,22 @@
             <li class="nav-item{% if app.request.get('_route') == 'app_login' %} active{% endif %}">
               <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
             </li>
+            <li class="nav-item{% if app.request.get('_route') == 'app_register' %} active{% endif %}">
+              {# <a class="nav-link" href="{{ path('app_register') }}">Inscription</a> #}
+            </li>
           </ul>
         {% endif %}
       </div>
     </nav>
 
     <main role="main" class="container">
+
+      <!-- Votre contenu ici -->
+
+    </main>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+ 

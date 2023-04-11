@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Player;
 use App\Form\PlayerType;
+use Psr\Log\LoggerInterface;
+use App\Form\SearchPlayerType;
 use App\Security\Voter\PlayerVoter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,7 +50,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_player_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_player_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Player $player): Response
     {
         return $this->render('player/show.html.twig', [
@@ -56,7 +58,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(Request $request, Player $player, PlayerRepository $playerRepository): Response
     {
         $form = $this->createForm(PlayerType::class, $player);
@@ -74,7 +76,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_player_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Player $player, PlayerRepository $playerRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $player->getId(), $request->request->get('_token'))) {
@@ -84,7 +86,7 @@ class PlayerController extends AbstractController
         return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['GET', 'POST'])]
+    #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
     {
         $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
@@ -100,6 +102,25 @@ class PlayerController extends AbstractController
         return $this->render('player/ownedgames.html.twig', [
             'player' => $player,
             'game_on_platform' => $gop
+        ]);
+    }
+
+    #[Route("/search", name: 'app_player_search', methods: ['GET', 'POST'])]
+    public function search(Request $request, PlayerRepository $playerRepository): Response
+    {
+        $form = $this->createForm(SearchPlayerType::class);
+        $form->handleRequest($request);
+    
+        $players = [];
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $criterias = $form->getData();
+            $players = $playerRepository->searchPlayers($criterias);
+        }
+    
+        return $this->render('player/search_form.html.twig', [
+            'searchForm' => $form->createView(),
+            'players' => $players,
         ]);
     }
 }

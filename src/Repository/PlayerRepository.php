@@ -76,85 +76,33 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
 
         $this->add($player, true);
     }
-    
-    // Méthode pour ajouter des critères de recherche
+
     public function searchPlayers(array $criterias): array
     {
         // on crée le query builder pour une requête personnalisée
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('p');
 
-        /* RECHERCHE TEXTUELLE */
-        /*
-        Tous les critères de recherche textuels se combinent :
-            si on cherche avec un pseudo et un tag Discord
-                => alors on recherche le pseudo OU le tag Discord
-            si on cherche avec pseudo, tag Discord et jeu
-                => alors on recherche le pseudo OU le tag Discord OU le titre du jeu
-
-        Exemple :
-            nickame => bg
-            game => pokemon
-
-            On obtiendra tous les joueurs qui on "bg" dans leur pseudo
-            ou qui veulent jouer à un jeu dont le titre contient "pokemon"
-        */
-
-        // on mettra ici les différentes conditions en fonction de chaque critère textuel
-        $textCriterias = [];
-        // on mettra ici les valeurs mises en forme qui seront données comme paramètres au QB
-        $textParameters = [];
-
-        // recherche des critères textuels => pour chaque critère à configurer...
-        foreach (self::$textSearchCriteriasConfigure as $criteria => $configMethod) {
-            // ...si le critère n'a pas été donné, on le saute
-            if (!key_exists($criteria, $criterias)) {
-                continue;
-            }
-            // ...on génère la condition DQL qui gère le critère après avoir
-            // configuré le query builder (jointures, etc.)
-            $textCriterias[] = $this->$configMethod($queryBuilder);
-            // s'il faut mettre en forme la valeur du critère pour la requête...
-            // (ex: ajouter les % pour un LIKE)
-            if (key_exists($criteria, self::$searchCriteriasFormat)) {
-                // ...on récupère le nom de la méthode qui sert à formater la valeur
-                $formatter = self::$searchCriteriasFormat[$criteria];
-                // ...on appelle la méthode pour formater la valeur et on ajoute cette
-                // valeur mise en forme aux critères qui seront passés au QB
-                $textParameters[$criteria] = $this->$formatter($criterias[$criteria]);
-            } else {
-                // s'il ne faut pas formater la valeur on l'ajoute telle quelle aux
-                // paramètres du QB
-                $textParameters[$criteria] = $criterias[$criteria];
-            }
-        }
-
         // si on a bien préparé les critères textuels
-        if (count($textCriterias) > 0) {
-            // ...on ajoute les conditions à la requêtes en les liant par des OR
-            $queryBuilder->andWhere(join(' OR ', $textCriterias))
+        if (isset($criterias['search']) && !empty($criterias['search'])) {
+            // on ajoute les conditions à la requête en les liant par des OR
+            $queryBuilder->andWhere('p.nickname LIKE :search OR p.discord_tag LIKE :search')
                 // ...et on injecte les valeurs en paramètres de la requête DQL
-                ->setParameters($textParameters);
+                ->setParameter('search', '%' . $criterias['search'] . '%');
         }
 
-        /* RECHERCHE PAR DISPONIBILITÉ */
-        if (key_exists('available', $criterias)) {
-            $available = $criterias['available'];
-            
+        // recherche par disponibilité
+        if (isset($criterias['available'])) {
             $queryBuilder->andWhere('p.available = :available')
-                ->setParameter('available', boolval($available));
+                ->setParameter('available', $criterias['available']);
         }
 
         return $queryBuilder->getQuery()
-            ->getResult()
-        ;
-        
-        // Sans critère :
-        // SELECT * FROM player ORDER BY id ASC
-        
-        // Avec seulement le critère "available"
-        // SELECT * FROM player WHERE available = TRUE ORDER BY id ASC
+            ->getResult();
     }
+
+
+
 
     private function configureNicknameSearchCriteria()
     {
@@ -177,8 +125,7 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
             ->join('gsp.wants_to_play', 'gsgop')
             ->join('gsgop.game', 'gsg')
             ->where($queryBuilder->expr()->eq('gsp.id', 'p.id'))
-            ->andWhere('gsg.title LIKE :game')
-        ;
+            ->andWhere('gsg.title LIKE :game');
 
         return (string) $queryBuilder->expr()->exists($subQueryBuilder->getDQL());
     }
@@ -187,29 +134,29 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
     {
         return '%' . $value . '%';
     }
-    
-//    /**
-//     * @return Player[] Returns an array of Player objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Player
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Player[] Returns an array of Player objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Player
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
