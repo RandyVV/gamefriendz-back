@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des jeux{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Liste des jeux</h1>
+
+        {# Afficher un formulaire de recherche #}
+        {{ form_start(searchForm, {'attr': {'class': 'form-inline mb-3'}}) }}
+            {{ form_row(searchForm.title, {'attr': {'class': 'form-control mr-2', 'placeholder': 'Titre'}}) }}
+            {{ form_row(searchForm.platform, {'attr': {'class': 'form-control mr-2'}}) }}
+        {{ form_end(searchForm) }}
+
+        {% if games|length > 0 %}
+            <h2 class="mt-5 mb-3">Résultats de la recherche</h2>
+            <div class="list-group">
+                {% for game in games %}
+                    <a href="{{ path('app_game_show', {'id': game.id}) }}" class="list-group-item list-group-item-action">
+                        <h5>{{ game.title }}</h5>
+                        <p class="mb-0">{{ game.releases|map(r => r.platform.name)|join(', ') }}</p>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucun jeu trouvé.</p>
+        {% endif %}
+        
+        <a href="{{ path('homepage') }}" class="btn btn-primary mt-3">Retour à l'accueil</a>
+    </div>
+{% endblock %}
