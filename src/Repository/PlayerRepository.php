@@ -159,4 +159,26 @@ class PlayerRepository extends ServiceEntityRepository implements PasswordUpgrad
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findOwnedGames(int $playerId): array
+    {
+        $ownedGamesQueryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.owned_games', 'og')
+            ->where('p.id = :playerId')
+            ->setParameter('playerId', $playerId)
+            ->select('p', 'og'); // Ajoutez l'alias 'p' ici
+
+        return $ownedGamesQueryBuilder->getQuery()->getResult();
+    }
+
+    public function findWantedGames(int $playerId): array
+    {
+        $wantedGamesQueryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.wants_to_play', 'wtp')
+            ->where('p.id = :playerId')
+            ->setParameter('playerId', $playerId)
+            ->select('p', 'wtp'); // Ajoutez l'alias 'p' ici
+
+        return $wantedGamesQueryBuilder->getQuery()->getResult();
+    }
 }

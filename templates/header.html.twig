@@ -36,12 +36,16 @@
           </li>
         </ul>
         {% if app.user %}
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
-            </li>
-          </ul>
-        {% else %}
+  <ul class="navbar-nav">
+    <li class="nav-item{% if app.request.get('_route') == 'app_profile' %} active{% endif %}">
+  <a class="nav-link" href="{{ path('app_player_profile', {'id': app.user.getId()}) }}">Mon profil</a>
+
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+    </li>
+  </ul>
+{% else %}
           <ul class="navbar-nav">
             <li class="nav-item{% if app.request.get('_route') == 'app_login' %} active{% endif %}">
               <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>

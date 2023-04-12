@@ -4,12 +4,20 @@
 
 {% block body %}
     <div class="container mt-4">
-<h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Recherche de joueurs</h1>
+        <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Recherche de joueurs</h1>
 
         {{ form_start(searchForm) }}
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    {{ form_row(searchForm.search, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher un joueur'}}) }}
+                    {# Ajoutez l'attribut 'list' à l'input de recherche et liez-le à l'ID de la datalist #}
+                    {{ form_row(searchForm.search, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher un joueur', 'list': 'player-list'}}) }}
+
+                    {# Créez un élément datalist pour stocker la liste des joueurs #}
+                    <datalist id="player-list">
+                        {% for player in playerList %}
+                            <option value="{{ player.nickname }}">{{ player.discordTag }}</option>
+                        {% endfor %}
+                    </datalist>
                 </div>
                 <div class="col-md-4 mb-3">
                     {{ form_row(searchForm.available, {'attr': {'class': 'form-control'}}) }}
@@ -39,5 +47,7 @@
                 {% endfor %}
             </div>
         {% endif %}
+    <a href="{{ path('homepage') }}" class="btn btn-primary">Retour à l'accueil</a>
+
     </div>
 {% endblock %}

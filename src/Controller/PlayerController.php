@@ -11,9 +11,11 @@ use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\GameOnPlatformRepository;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/player')]
@@ -105,22 +107,70 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route("/search", name: 'app_player_search', methods: ['GET', 'POST'])]
+    #[Route('/{id}/wantstoplay', name: 'app_player_wantstoplay', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
+        $postData = $request->toArray();
+        $gopId = $postData["id"];
+        $gop = $gopRepository->find($gopId);
+        $player->addWantsToPlay($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        return $this->render('player/wantstoplay.html.twig', [
+            'player' => $player,
+            'game_on_platform' => $gop
+        ]);
+    }
+
+
+    #[Route('/search', name: 'app_player_search', methods: ['GET', 'POST'])]
     public function search(Request $request, PlayerRepository $playerRepository): Response
     {
         $form = $this->createForm(SearchPlayerType::class);
         $form->handleRequest($request);
-    
+
         $players = [];
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             $criterias = $form->getData();
             $players = $playerRepository->searchPlayers($criterias);
         }
-    
+
+        // Récupérez la liste de joueurs pour l'auto-complétion
+        $playerList = $playerRepository->findAll();
+
         return $this->render('player/search_form.html.twig', [
             'searchForm' => $form->createView(),
             'players' => $players,
+            'playerList' => $playerList, // Passez la liste des joueurs à votre template Twig
+        ]);
+    }
+
+    #[Route('/{id}/profile', name: 'app_player_profile', methods: ['GET'], requirements: ['id' => '\d+'])]
+    public function profile(int $id, Player $player, Security $security, PlayerRepository $playerRepository): Response
+    {
+        // Vérifier si l'utilisateur courant est autorisé à afficher le profil
+        $currentUser = $security->getUser();
+        if ($currentUser !== $player && !$security->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException("Vous n'êtes pas autorisé à accéder à ce profil.");
+        }
+
+        if (!$player) {
+            throw $this->createNotFoundException('Le joueur demandé n\'existe pas.');
+        }
+
+        // Récupérez la liste des jeux possédés et souhaités en utilisant les nouvelles méthodes
+        $ownedGames = $playerRepository->findOwnedGames($id);
+        $wantsToPlay = $playerRepository->findWantedGames($id);
+
+        return $this->render('player/profile.html.twig', [
+            'player' => $player,
+            'ownedGames' => $ownedGames,
+            'wantsToPlay' => $wantsToPlay,
         ]);
     }
 }

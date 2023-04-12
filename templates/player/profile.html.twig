@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ player.nickname }}{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">{{ player.nickname }} - Profil</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Informations</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th scope="row">Pseudo :</th>
+                                <td>{{ player.nickname }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Tag Discord :</th>
+                                <td>{{ player.discordTag }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Jeux possédés</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for gameOnPlatform in player.ownedGames %}
+                                <li class="list-group-item">{{ gameOnPlatform.game.title }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Jeux auxquels je veux jouer</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% for gameOnPlatform in player.wantsToPlay %}
+                                <li class="list-group-item">{{ gameOnPlatform.game.title }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="{{ path('homepage') }}" class="btn btn-primary mt-4">Retour à l'accueil</a>
+    </div>
+{% endblock %}
