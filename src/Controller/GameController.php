@@ -15,69 +15,72 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/game')]
 class GameController extends AbstractController
 {
-    #[Route('/', name: 'app_game_index', methods: ['GET'])]
-    public function index(GameRepository $gameRepository): Response
-    {
-        return $this->render('game/index.html.twig', [
-            'games' => $gameRepository->findAll(),
-        ]);
-    }
+    // #[Route('/', name: 'app_game_index', methods: ['GET'])]
+    // public function index(GameRepository $gameRepository): Response
+    // {
+    //     return $this->render('game/index.html.twig', [
+    //         'games' => $gameRepository->findAll(),
+    //     ]);
+    // }
 
-    #[Route('/new', name: 'app_game_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, GameRepository $gameRepository): Response
-    {
-        $game = new Game();
-        $form = $this->createForm(GameType::class, $game);
-        $form->handleRequest($request);
+    // #[Route('/new', name: 'app_game_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, GameRepository $gameRepository): Response
+    // {
+    //     $game = new Game();
+    //     $form = $this->createForm(GameType::class, $game);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $gameRepository->add($game, true);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $gameRepository->add($game, true);
 
-            return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('game/new.html.twig', [
-            'game' => $game,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('game/new.html.twig', [
+    //         'game' => $game,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/{id}', name: 'app_game_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(Game $game): Response
     {
+        $currentPlayer = $this->getUser();
+ 
         return $this->render('game/show.html.twig', [
             'game' => $game,
+            'current_player' => $currentPlayer,
         ]);
     }
 
 
-    #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, Game $game, GameRepository $gameRepository): Response
-    {
-        $form = $this->createForm(GameType::class, $game);
-        $form->handleRequest($request);
+    // #[Route('/{id}/edit', name: 'app_game_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    // public function edit(Request $request, Game $game, GameRepository $gameRepository): Response
+    // {
+    //     $form = $this->createForm(GameType::class, $game);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $gameRepository->add($game, true);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $gameRepository->add($game, true);
 
-            return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('game/edit.html.twig', [
-            'game' => $game,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('game/edit.html.twig', [
+    //         'game' => $game,
+    //         'form' => $form,
+    //     ]);
+    // }
 
-    #[Route('/{id}', name: 'app_game_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
-            $gameRepository->remove($game, true);
-        }
+    // #[Route('/{id}', name: 'app_game_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    // public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete' . $game->getId(), $request->request->get('_token'))) {
+    //         $gameRepository->remove($game, true);
+    //     }
 
-        return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
-    }
+    //     return $this->redirectToRoute('app_game_index', [], Response::HTTP_SEE_OTHER);
+    // }
 
     #[Route('/search', name: 'app_game_search', methods: ['GET', 'POST'])]
     public function search(Request $request, GameRepository $gameRepository, PlatformRepository $platformRepository): Response

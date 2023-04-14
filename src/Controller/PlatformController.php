@@ -21,58 +21,58 @@ class PlatformController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_platform_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, PlatformRepository $platformRepository): Response
-    {
-        $platform = new Platform();
-        $form = $this->createForm(PlatformType::class, $platform);
-        $form->handleRequest($request);
+    // #[Route('/new', name: 'app_platform_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, PlatformRepository $platformRepository): Response
+    // {
+    //     $platform = new Platform();
+    //     $form = $this->createForm(PlatformType::class, $platform);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $platformRepository->add($platform, true);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $platformRepository->add($platform, true);
 
-            return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('platform/new.html.twig', [
-            'platform' => $platform,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('platform/new.html.twig', [
+    //         'platform' => $platform,
+    //         'form' => $form,
+    //     ]);
+    // }
 
-    #[Route('/{id}', name: 'app_platform_show', methods: ['GET'])]
-    public function show(Platform $platform): Response
-    {
-        return $this->render('platform/show.html.twig', [
-            'platform' => $platform,
-        ]);
-    }
+    // #[Route('/{id}', name: 'app_platform_show', methods: ['GET'])]
+    // public function show(Platform $platform): Response
+    // {
+    //     return $this->render('platform/show.html.twig', [
+    //         'platform' => $platform,
+    //     ]);
+    // }
 
-    #[Route('/{id}/edit', name: 'app_platform_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Platform $platform, PlatformRepository $platformRepository): Response
-    {
-        $form = $this->createForm(PlatformType::class, $platform);
-        $form->handleRequest($request);
+    // #[Route('/{id}/edit', name: 'app_platform_edit', methods: ['GET', 'POST'])]
+    // public function edit(Request $request, Platform $platform, PlatformRepository $platformRepository): Response
+    // {
+    //     $form = $this->createForm(PlatformType::class, $platform);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $platformRepository->add($platform, true);
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $platformRepository->add($platform, true);
 
-            return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->renderForm('platform/edit.html.twig', [
-            'platform' => $platform,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('platform/edit.html.twig', [
+    //         'platform' => $platform,
+    //         'form' => $form,
+    //     ]);
+    // }
 
-    #[Route('/{id}', name: 'app_platform_delete', methods: ['POST'])]
-    public function delete(Request $request, Platform $platform, PlatformRepository $platformRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$platform->getId(), $request->request->get('_token'))) {
-            $platformRepository->remove($platform, true);
-        }
+    // #[Route('/{id}', name: 'app_platform_delete', methods: ['POST'])]
+    // public function delete(Request $request, Platform $platform, PlatformRepository $platformRepository): Response
+    // {
+    //     if ($this->isCsrfTokenValid('delete'.$platform->getId(), $request->request->get('_token'))) {
+    //         $platformRepository->remove($platform, true);
+    //     }
 
-        return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
-    }
+    //     return $this->redirectToRoute('app_platform_index', [], Response::HTTP_SEE_OTHER);
+    // }
 }

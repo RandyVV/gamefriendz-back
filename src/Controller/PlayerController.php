@@ -88,43 +88,87 @@ class PlayerController extends AbstractController
         return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+        $currentPlayer = $this->getUser();
 
-        $postData = $request->toArray();
-        $gopId = $postData["id"];
-        $gop = $gopRepository->find($gopId);
+        if (!$player || !$currentPlayer || $player !== $currentPlayer) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un jeu à la liste ownedGames.');
+        }
+
+        $gop = $gopRepository->find($request->request->get('id'));
         $player->addOwnedGame($gop);
 
         $em->persist($player);
         $em->flush();
 
-        return $this->render('player/ownedgames.html.twig', [
-            'player' => $player,
-            'game_on_platform' => $gop
-        ]);
+        $this->addFlash('success', 'Le jeu a été ajouté à ma liste avec succès.');
+
+        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
     }
 
-    #[Route('/{id}/wantstoplay', name: 'app_player_wantstoplay', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+
+    #[Route('/{id}/wantstoplay', name: 'app_player_wantstoplay', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function addWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
     {
-        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+        $currentPlayer = $this->getUser();
 
-        $postData = $request->toArray();
-        $gopId = $postData["id"];
-        $gop = $gopRepository->find($gopId);
+        if (!$player || !$currentPlayer || $player !== $currentPlayer) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un jeu à la liste ownedGames.');
+        }
+
+        $gop = $gopRepository->find($request->request->get('id'));
         $player->addWantsToPlay($gop);
 
         $em->persist($player);
         $em->flush();
 
-        return $this->render('player/wantstoplay.html.twig', [
-            'player' => $player,
-            'game_on_platform' => $gop
-        ]);
+        $this->addFlash('success', 'Le jeu a été ajouté à ma liste des envies avec succès.');
+
+        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
     }
+
+    #[Route('/{id}/ownedgames/remove', name: 'app_player_ownedgames_remove', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
+    {
+        $currentPlayer = $this->getUser();
+
+        if (!$player || !$currentPlayer || $player !== $currentPlayer) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste ownedGames.');
+        }
+
+        $gop = $gopRepository->find($request->request->get('id'));
+        $player->removeOwnedGame($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        $this->addFlash('success', 'Le jeu a été supprimé de ma liste avec succès.');
+
+        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
+    }
+
+    #[Route('/{id}/wantstoplay/remove', name: 'app_player_wantstoplay_remove', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
+    {
+        $currentPlayer = $this->getUser();
+
+        if (!$player || !$currentPlayer || $player !== $currentPlayer) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste wantsToPlay.');
+        }
+
+        $gop = $gopRepository->find($request->request->get('id'));
+        $player->removeWantsToPlay($gop);
+
+        $em->persist($player);
+        $em->flush();
+
+        $this->addFlash('success', 'Le jeu a été supprimé de ma liste des envies avec succès.');
+
+        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
+    }
+
 
 
     #[Route('/search', name: 'app_player_search', methods: ['GET', 'POST'])]

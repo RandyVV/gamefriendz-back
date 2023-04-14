@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <ul class="list-group">
                             {% for gameOnPlatform in player.ownedGames %}
-                                <li class="list-group-item">{{ gameOnPlatform.game.title }}</li>
+                                <li class="list-group-item">{{ gameOnPlatform.game.title }} - {{ gameOnPlatform.platform.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -45,7 +45,7 @@
                     <div class="card-body">
                         <ul class="list-group">
                             {% for gameOnPlatform in player.wantsToPlay %}
-                                <li class="list-group-item">{{ gameOnPlatform.game.title }}</li>
+                                <li class="list-group-item">{{ gameOnPlatform.game.title }} - {{ gameOnPlatform.platform.name }}</li>
                             {% endfor %}
                         </ul>
                     </div>

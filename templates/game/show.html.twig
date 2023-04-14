@@ -3,36 +3,67 @@
 {% block title %}Game{% endblock %}
 
 {% block body %}
-    <h1>Game</h1>
+{% include 'header.html.twig' %}
+    <h1 class="text-center">Game</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ game.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ game.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ game.description }}</td>
-            </tr>
-            <tr>
-                <th>Has_multiplayer_mode</th>
-                <td>{{ game.hasMultiplayerMode ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Picture</th>
-                <td>{{ game.picture }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-    <a href="{{ path('app_game_index') }}">back to list</a>
+    <div class="d-flex justify-content-center">
+        <div class="card" style="width: 30rem;">
+            <img src="{{ game.picture }}" class="card-img-top" alt="Game image">
+            <div class="card-body">
+                <h5 class="card-title">{{ game.title }}</h5>
+                <p class="card-text">{{ game.description }}</p>
+            </div>
+            {% if is_granted('ROLE_USER') %}
+            <form method="post">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        Plateformes:
+                        <select class="form-select" name="id">
+                            {% for release in game.releases %}
+                                <option value="{{ release.id }}" data-release-date="{{ release.releaseDate|date('Y-m-d') }}">
+                                    {{ release.platform.name }}
+                                    - Date de sortie:
+                                    {{ release.releaseDate|date('Y-m-d') }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </li>
+                    <li class="list-group-item" id="releaseDate">Veuillez sélectionner une plateforme pour voir la date de sortie.</li>
+                    <li class="list-group-item">Multijoueur:
+                        {{ game.hasMultiplayerMode ? 'Oui' : 'Non' }}</li>
+                </ul>
+                <div class="d-flex justify-content-between mt-2">
+                    <button type="submit" class="btn btn-primary" formaction="{{ path('app_player_ownedgames', {'id': current_player.id}) }}">
+                        Ajouter à ma liste
+                    </button>
+                    
+                    <button type="submit" class="btn btn-primary" formaction="{{ path('app_player_wantstoplay', {'id': current_player.id}) }}">
+                        Ajouter à mes envies
+                    </button>
+                </div>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
 
-    <a href="{{ path('app_game_edit', {'id': game.id}) }}">edit</a>
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const platformSelect = document.querySelector('.form-select');
+            const releaseDateElement = document.getElementById('releaseDate');
 
-    {{ include('game/_delete_form.html.twig') }}
+            platformSelect.addEventListener('change', function() {
+                const selectedOption = platformSelect.options[platformSelect.selectedIndex];
+                const releaseDate = selectedOption.getAttribute('data-release-date');
+                releaseDateElement.textContent = 'Date de sortie: ' + releaseDate;
+            });
+        });
+    </script>
 {% endblock %}
