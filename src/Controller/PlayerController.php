@@ -61,34 +61,6 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, Player $player, PlayerRepository $playerRepository): Response
-    {
-        $form = $this->createForm(PlayerType::class, $player);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $playerRepository->add($player, true);
-
-            return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('player/edit.html.twig', [
-            'player' => $player,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(Request $request, Player $player, PlayerRepository $playerRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $player->getId(), $request->request->get('_token'))) {
-            $playerRepository->remove($player, true);
-        }
-
-        return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
-    }
-
     #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
     {
@@ -130,13 +102,13 @@ class PlayerController extends AbstractController
         return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
     }
 
-    #[Route('/{id}/ownedgames/remove', name: 'app_player_ownedgames_remove', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
+    #[Route('/{id}/ownedgames/remove/{redirectRoute}/{redirectId}', name: 'app_player_ownedgames_remove', methods: ['POST'], requirements: ['id' => '\d+', 'redirectRoute' => 'app_game_show|app_player_profile', 'redirectId' => '\d+'])]
+    public function removeOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em, string $redirectRoute, int $redirectId): Response
     {
         $currentPlayer = $this->getUser();
 
         if (!$player || !$currentPlayer || $player !== $currentPlayer) {
-            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste ownedGames.');
+            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste.');
         }
 
         $gop = $gopRepository->find($request->request->get('id'));
@@ -147,16 +119,16 @@ class PlayerController extends AbstractController
 
         $this->addFlash('success', 'Le jeu a été supprimé de ma liste avec succès.');
 
-        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
+        return $this->redirectToRoute($redirectRoute, ['id' => $redirectId]);
     }
 
-    #[Route('/{id}/wantstoplay/remove', name: 'app_player_wantstoplay_remove', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response
+    #[Route('/{id}/wantstoplay/remove/{redirectRoute}/{redirectId}', name: 'app_player_wantstoplay_remove', methods: ['POST'], requirements: ['id' => '\d+', 'redirectRoute' => 'app_game_show|app_player_profile', 'redirectId' => '\d+'])]
+    public function removeWantsToPlay(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em, string $redirectRoute, int $redirectId): Response
     {
         $currentPlayer = $this->getUser();
 
         if (!$player || !$currentPlayer || $player !== $currentPlayer) {
-            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste wantsToPlay.');
+            throw $this->createAccessDeniedException('Vous devez être connecté pour supprimer un jeu de la liste auxquels vous voulez jouer.');
         }
 
         $gop = $gopRepository->find($request->request->get('id'));
@@ -167,10 +139,8 @@ class PlayerController extends AbstractController
 
         $this->addFlash('success', 'Le jeu a été supprimé de ma liste des envies avec succès.');
 
-        return $this->redirectToRoute('app_game_show', ['id' => $gop->getGame()->getId()]);
+        return $this->redirectToRoute($redirectRoute, ['id' => $redirectId]);
     }
-
-
 
     #[Route('/search', name: 'app_player_search', methods: ['GET', 'POST'])]
     public function search(Request $request, PlayerRepository $playerRepository): Response
@@ -217,5 +187,40 @@ class PlayerController extends AbstractController
             'ownedGames' => $ownedGames,
             'wantsToPlay' => $wantsToPlay,
         ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function edit(Request $request, Player $player, PlayerRepository $playerRepository): Response
+    {
+        $currentUser = $this->getUser();
+        if (!$player || !$currentUser || $player !== $currentUser) {
+            throw $this->createAccessDeniedException('Vous ne pouvez modifier que votre propre profil.');
+        }
+
+        $form = $this->createForm(PlayerType::class, $player);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $playerRepository->add($player, true);
+
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
+
+            return $this->redirectToRoute('app_player_profile', ['id' => $player->getId()]);
+        }
+
+        return $this->renderForm('player/edit.html.twig', [
+            'player' => $player,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function delete(Request $request, Player $player, PlayerRepository $playerRepository): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $player->getId(), $request->request->get('_token'))) {
+            $playerRepository->remove($player, true);
+        }
+
+        return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
     }
 }

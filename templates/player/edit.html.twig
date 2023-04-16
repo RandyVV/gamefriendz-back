@@ -1,13 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Player{% endblock %}
+{% block title %}Modifier mon profil{% endblock %}
 
 {% block body %}
-    <h1>Edit Player</h1>
-
-    {{ include('player/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('app_player_index') }}">back to list</a>
-
-    {{ include('player/_delete_form.html.twig') }}
+    <div class="container mt-4">
+        <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Modifier mon profil</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3>Informations du joueur</h3>
+                    </div>
+                    <div class="card-body">
+                        {{ include('player/_form.html.twig', {'button_label': 'Mettre à jour', 'button_class': 'btn-primary'}) }}
+                    </div>
+                </div>
+                <div class="mt-4">
+                    {{ include('player/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -50,14 +50,14 @@
                     </ul>
                     <div class="d-flex justify-content-between mt-2">
                         
-                            <button type="submit" class="btn btn-danger" id="remove-owned-game" hidden formaction="{{ path('app_player_ownedgames_remove', {'id': current_player.id}) }}">
+                            <button type="submit" class="btn btn-danger" id="remove-owned-game" hidden formaction="{{ path('app_player_ownedgames_remove', {'id': current_player.id, 'redirectRoute': 'app_game_show', 'redirectId': game.id}) }}">
                                 Retirer de ma liste
                             </button>
                             <button type="submit" class="btn btn-primary" id="add-owned-game" hidden formaction="{{ path('app_player_ownedgames', {'id': current_player.id}) }}">
                                 Ajouter à ma liste
                             </button>
 
-                            <button type="submit" class="btn btn-danger" id="remove-wantstoplay" hidden formaction="{{ path('app_player_wantstoplay_remove', {'id': current_player.id}) }}">
+                            <button type="submit" class="btn btn-danger" id="remove-wantstoplay" hidden formaction="{{ path('app_player_wantstoplay_remove', {'id': current_player.id, 'redirectRoute': 'app_game_show', 'redirectId': game.id}) }}">
                                 Retirer de mes envies
                             </button>
                             <button type="submit" class="btn btn-primary" id="add-wantstoplay" hidden formaction="{{ path('app_player_wantstoplay', {'id': current_player.id}) }}">
@@ -81,7 +81,7 @@
             const removeWantToPlayButton = document.querySelector('#remove-wantstoplay');
 
 
-            // const releaseDateElement = document.getElementById('releaseDate');
+            const releaseDateElement = document.getElementById('releaseDate');
 
             function toggleOwnedGameButtons() {
                 const selectedOption = platformSelect.selectedOptions[0];
@@ -107,8 +107,8 @@
                 toggleOwnedGameButtons();
                 toggleWantToPlayButtons();
 
-                // const releaseDate = selectedOption.getAttribute('data-release-date');
-                // releaseDateElement.textContent = 'Date de sortie: ' + releaseDate;
+                const releaseDate = selectedOption.getAttribute('data-release-date');
+                releaseDateElement.textContent = 'Date de sortie: ' + releaseDate;
             });
 
             toggleOwnedGameButtons();
