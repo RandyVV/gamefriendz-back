@@ -3,8 +3,8 @@
 {% block title %}Game{% endblock %}
 
 {% block body %}
-{% include 'header.html.twig' %}
-    <h1 class="text-center">Game</h1>
+    {% include 'header.html.twig' %}
+    <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);" class="text-center">Game</h1>
 
     {% for message in app.flashes('success') %}
         <div class="alert alert-success text-center" role="alert">
@@ -20,34 +20,51 @@
                 <p class="card-text">{{ game.description }}</p>
             </div>
             {% if is_granted('ROLE_USER') %}
-            <form method="post">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        Plateformes:
-                        <select class="form-select" name="id">
-                            {% for release in game.releases %}
-                                <option value="{{ release.id }}" data-release-date="{{ release.releaseDate|date('Y-m-d') }}">
-                                    {{ release.platform.name }}
-                                    - Date de sortie:
-                                    {{ release.releaseDate|date('Y-m-d') }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </li>
-                    <li class="list-group-item" id="releaseDate">Veuillez sélectionner une plateforme pour voir la date de sortie.</li>
-                    <li class="list-group-item">Multijoueur:
-                        {{ game.hasMultiplayerMode ? 'Oui' : 'Non' }}</li>
-                </ul>
-                <div class="d-flex justify-content-between mt-2">
-                    <button type="submit" class="btn btn-primary" formaction="{{ path('app_player_ownedgames', {'id': current_player.id}) }}">
-                        Ajouter à ma liste
-                    </button>
-                    
-                    <button type="submit" class="btn btn-primary" formaction="{{ path('app_player_wantstoplay', {'id': current_player.id}) }}">
-                        Ajouter à mes envies
-                    </button>
-                </div>
-            </form>
+                <form method="post">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            Plateformes:
+                            <select class="form-select" name="id" id="gameonplatform">
+                                {% for release in game.releases %}
+                                    <option value="{{ release.id }}"
+                                        data-release-date="{{ release.releaseDate|date('Y-m-d') }}"
+                                        {% if current_player.ownedGames.contains(release) %}
+                                            data-owned
+                                        {% endif %}
+                                        {% if current_player.wantsToPlay.contains(release) %}
+                                            data-wantstoplay
+                                        {% endif %}
+                                    >
+
+                                        {{ release.platform.name }}
+                                        - Date de sortie:
+                                        {{ release.releaseDate|date('Y-m-d') }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </li>
+                        <li class="list-group-item" id="releaseDate">Veuillez sélectionner une plateforme pour voir la date de sortie.</li>
+                        <li class="list-group-item">Multijoueur:
+                            {{ game.hasMultiplayerMode ? 'Oui' : 'Non' }}
+                        </li>
+                    </ul>
+                    <div class="d-flex justify-content-between mt-2">
+                        
+                            <button type="submit" class="btn btn-danger" id="remove-owned-game" hidden formaction="{{ path('app_player_ownedgames_remove', {'id': current_player.id}) }}">
+                                Retirer de ma liste
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="add-owned-game" hidden formaction="{{ path('app_player_ownedgames', {'id': current_player.id}) }}">
+                                Ajouter à ma liste
+                            </button>
+
+                            <button type="submit" class="btn btn-danger" id="remove-wantstoplay" hidden formaction="{{ path('app_player_wantstoplay_remove', {'id': current_player.id}) }}">
+                                Retirer de mes envies
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="add-wantstoplay" hidden formaction="{{ path('app_player_wantstoplay', {'id': current_player.id}) }}">
+                                Ajouter à mes envies
+                            </button>
+                    </div>
+                </form>
             {% endif %}
         </div>
     </div>
@@ -55,15 +72,47 @@
 
 {% block javascripts %}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const platformSelect = document.querySelector('.form-select');
-            const releaseDateElement = document.getElementById('releaseDate');
+        document.addEventListener('DOMContentLoaded', function () {
+            const platformSelect = document.querySelector('#gameonplatform');
 
-            platformSelect.addEventListener('change', function() {
-                const selectedOption = platformSelect.options[platformSelect.selectedIndex];
-                const releaseDate = selectedOption.getAttribute('data-release-date');
-                releaseDateElement.textContent = 'Date de sortie: ' + releaseDate;
+            const addOwnedGameButton = document.querySelector('#add-owned-game');
+            const removeOwnedGameButton = document.querySelector('#remove-owned-game');
+            const addWantToPlayButton = document.querySelector('#add-wantstoplay');
+            const removeWantToPlayButton = document.querySelector('#remove-wantstoplay');
+
+
+            // const releaseDateElement = document.getElementById('releaseDate');
+
+            function toggleOwnedGameButtons() {
+                const selectedOption = platformSelect.selectedOptions[0];
+
+                const isOwned = selectedOption.hasAttribute('data-owned');
+
+                removeOwnedGameButton.hidden = !isOwned;
+                addOwnedGameButton.hidden = isOwned;
+
+            }
+
+            function toggleWantToPlayButtons() {
+                const selectedOption = platformSelect.selectedOptions[0];
+
+                const wantsToPlay = selectedOption.hasAttribute('data-wantstoplay');
+
+                removeWantToPlayButton.hidden = !wantsToPlay;
+                addWantToPlayButton.hidden = wantsToPlay;
+            }
+
+            platformSelect.addEventListener('change', function () {
+
+                toggleOwnedGameButtons();
+                toggleWantToPlayButtons();
+
+                // const releaseDate = selectedOption.getAttribute('data-release-date');
+                // releaseDateElement.textContent = 'Date de sortie: ' + releaseDate;
             });
+
+            toggleOwnedGameButtons();
+            toggleWantToPlayButtons();
         });
     </script>
 {% endblock %}
