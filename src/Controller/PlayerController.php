@@ -190,7 +190,7 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(Request $request, Player $player, PlayerRepository $playerRepository): Response
+    public function edit(Request $request, Player $player, PlayerRepository $playerRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $currentUser = $this->getUser();
         if (!$player || !$currentUser || $player !== $currentUser) {
@@ -201,6 +201,14 @@ class PlayerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupérer le champ de mot de passe du formulaire
+            $password = $form->get('password')->getData();
+            // Hacher le mot de passe seulement s'il est renseigné
+            if ($password) {
+                $hashedPassword = $passwordHasher->hashPassword($player, $password);
+                $player->setPassword($hashedPassword);
+            }
+
             $playerRepository->add($player, true);
 
             $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
@@ -214,6 +222,7 @@ class PlayerController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(Request $request, Player $player, PlayerRepository $playerRepository): Response
     {
@@ -222,5 +231,15 @@ class PlayerController extends AbstractController
         }
 
         return $this->redirectToRoute('app_player_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/available', name: 'app_player_available', methods: ['POST'], requirements: ['id' => '\d+'])]
+    public function available(Player $player, EntityManagerInterface $em): Response
+    {
+        $player->setAvailable(!$player->isAvailable());
+        $em->persist($player);
+        $em->flush();
+
+        return $this->redirectToRoute('app_player_profile', ['id' => $player->getId()]);
     }
 }

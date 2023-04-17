@@ -17,12 +17,24 @@
                         <table class="table table-borderless">
                             <tr>
                                 <th scope="row" class="text-primary">Pseudo :</th>
-                                <td>{{ player.nickname }}</td>
+                                <td>{{ player.nickname }}{% if player.isAvailable() %} <span class="badge bg-success">Disponible</span>{% else %} <span class="badge bg-danger">Indisponible</span>{% endif %}</td>
                             </tr>
                             <tr>
                                 <th scope="row" class="text-primary">Tag Discord :</th>
                                 <td>{{ player.discordTag }}</td>
                             </tr>
+                            <tr>
+                                <th scope="row" class="text-primary">Disponible :</th>
+                                <td>
+                                    <form method="post" action="{{ path('app_player_available', {'id': player.id}) }}">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="availableSwitch" name="available" {% if player.isAvailable() %}checked{% endif %}>
+                                            <label class="form-check-label" for="availableSwitch">Oui/Non</label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
+                                    </form>
+                                </td>
+                            </tr>    
                         </table>
                     </div>
                 </div>
@@ -76,4 +88,6 @@
 </div>
 </div>
 {% endblock %}
+
+
 

@@ -3,17 +3,16 @@
 namespace App\Form;
 
 use App\Entity\Player;
-use Doctrine\DBAL\Types\BooleanType;
-use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class PlayerType extends AbstractType
@@ -29,25 +28,32 @@ class PlayerType extends AbstractType
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Email()
+                    new Email(),
                 ]
             ])
-            // ->add('roles')
             ->add('password', PasswordType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Length(null, 4),
+                    new Length([
+                        'min' => 8,
+                        'max' => 255,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/',
+                        'message' => 'Le mot de passe doit avoir au minimum 8, au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial en @$!%*?&',
+                    ]),
                 ],
-                'help' => 'Minimum eight and maximum 10 characters, at least one uppercase letter, one lowercase letter, one number and one special character in @$!%*?&'
+                'help' => 'Minimum huit, au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial en @$!%*?&',
             ])
             ->add('discord_tag', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Regex('/^[^\s]+\#\d{4}$/i')
-                ]
-            ])
-            // ->add('available', BooleanType::class)
-            ;
+                    new Regex([
+                        'pattern' => '/^[^\s]+\#\d{4}$/i',
+                        'message' => 'Tag Discord invalide',
+                    ]),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
