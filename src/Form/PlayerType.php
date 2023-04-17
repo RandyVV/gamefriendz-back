@@ -23,12 +23,18 @@ class PlayerType extends AbstractType
             ->add('nickname', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
+                ],
+                'attr' => [
+                    'placeholder' => 'Pseudo'
                 ]
             ])
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Email(),
+                ],
+                'attr' => [
+                    'placeholder' => 'Email'
                 ]
             ])
             ->add('password', PasswordType::class, [
@@ -44,15 +50,21 @@ class PlayerType extends AbstractType
                     ]),
                 ],
                 'help' => 'Minimum huit, au moins une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial en @$!%*?&',
+                'attr' => [
+                    'placeholder' => 'Mot de passe'
+                ]
             ])
             ->add('discord_tag', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
                     new Regex([
                         'pattern' => '/^[^\s]+\#\d{4}$/i',
-                        'message' => 'Tag Discord invalide',
+                        'message' => 'Tag Discord invalide, exemple : John#1234',
                     ]),
                 ],
+                'attr' => [
+                    'placeholder' => 'Tag Discord'
+                ]
             ]);
     }
 
