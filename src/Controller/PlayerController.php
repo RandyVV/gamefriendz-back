@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Form\PlayerType;
 use Psr\Log\LoggerInterface;
+use App\Form\PlayerAvatarType;
 use App\Form\SearchPlayerType;
 use App\Security\Voter\PlayerVoter;
 use App\Repository\PlayerRepository;
@@ -14,9 +15,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/player')]
@@ -165,8 +167,8 @@ class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/profile', name: 'app_player_profile', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function profile(int $id, Player $player, Security $security, PlayerRepository $playerRepository): Response
+    #[Route('/{id}/profile', name: 'app_player_profile', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
+    public function profile(int $id, Player $player, Security $security, PlayerRepository $playerRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         // Vérifier si l'utilisateur courant est autorisé à afficher le profil
         $currentUser = $security->getUser();
@@ -178,12 +180,25 @@ class PlayerController extends AbstractController
             throw $this->createNotFoundException('Le joueur demandé n\'existe pas.');
         }
 
+        // Créez le formulaire
+        $form = $this->createForm(PlayerAvatarType::class, $player);
+
+        // Traitez la soumission du formulaire (si applicable)
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Mettez à jour l'avatar et enregistrez les modifications dans la base de données
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_player_profile', ['id' => $player->getId()]);
+        }
+
         // Récupérez la liste des jeux possédés et souhaités en utilisant les nouvelles méthodes
         $ownedGames = $playerRepository->findOwnedGames($id);
         $wantsToPlay = $playerRepository->findWantedGames($id);
 
         return $this->render('player/profile.html.twig', [
             'player' => $player,
+            'form' => $form->createView(),
             'ownedGames' => $ownedGames,
             'wantsToPlay' => $wantsToPlay,
         ]);
@@ -241,5 +256,45 @@ class PlayerController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_player_profile', ['id' => $player->getId()]);
+    }
+
+    /**
+     * @Route("/{id}/update-avatar", name="player_update_avatar", methods={"POST"})
+     */
+    public function updatePlayerAvatar(Player $player, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    {
+        $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
+
+        $form = $this->createForm(PlayerAvatarType::class, $player);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var Symfony\Component\HttpFoundation\UploadedFile $pictureFile */
+            $pictureFile = $form->get('avatar')->getData();
+
+            $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+            $formattedFilename = $slugger->slug($originalFilename);
+            $newFilename = uniqid($formattedFilename) . '.' . $pictureFile->guessExtension();
+
+            $pictureFile->move(
+                $this->getParameter('avatar_pictures_directory'),
+                $newFilename
+            );
+
+            $pictureUrl = $request->getUriForPath(
+                $this->getParameter('avatar_pictures_directory_url_path') . $newFilename
+            );
+
+            $player->setAvatar($pictureUrl);
+            $em->persist($player);
+            $em->flush();
+
+            $this->addFlash('success', 'Avatar mis à jour avec succès.');
+
+            return $this->redirectToRoute('app_player_profile', ['id' => $player->getId()]);
+        }
     }
 }

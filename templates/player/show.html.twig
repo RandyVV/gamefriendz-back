@@ -3,48 +3,39 @@
 {% block title %}Player{% endblock %}
 
 {% block body %}
-    <h1>Player</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ player.id }}</td>
-            </tr>
-            <tr>
-                <th>Nickname</th>
-                <td>{{ player.nickname }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ player.email }}</td>
-            </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ player.roles ? player.roles|json_encode : '' }}</td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td>{{ player.password }}</td>
-            </tr>
-            <tr>
-                <th>Available</th>
-                <td>{{ player.available ? 'Yes' : 'No' }}</td>
-            </tr>
-            <tr>
-                <th>Discord_tag</th>
-                <td>{{ player.discordTag }}</td>
-            </tr>
-            <tr>
-                <th>Avatar</th>
-                <td>{{ player.avatar }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_player_index') }}">back to list</a>
-
-    <a href="{{ path('app_player_edit', {'id': player.id}) }}">edit</a>
-
-    {{ include('player/_delete_form.html.twig') }}
+    {% include 'header.html.twig' %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white bg-primary">
+                        <h3 class="mb-0">{{ player.nickname }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="{{ player.avatar }}" class="img-fluid rounded" alt="Player avatar">
+                            </div>
+                            <div class="col-md-8">
+                                <p class="card-text">Discord Tag: <strong>{{ player.discordTag }}</strong></p>
+                                <p class="card-text">Availability: <strong>{{ player.available ? 'Yes' : 'No' }}</strong></p>
+                                <h5 class="card-text mt-3">Ses jeux:</h5>
+                                <ul>
+                                    {% for game in player.ownedGames %}
+                                        <li>{{ game.game.title }} ({{ game.platform.name }})</li>
+                                    {% endfor %}
+                                </ul>
+                                <h5 class="card-text mt-3">Ses envies de jouer:</h5>
+                                <ul>
+                                    {% for game in player.wantsToPlay %}
+                                        <li>{{ game.game.title }} ({{ game.platform.name }})</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
