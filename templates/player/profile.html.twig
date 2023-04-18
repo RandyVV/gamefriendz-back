@@ -15,7 +15,7 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center mb-4">
-                            <img src="{{ player.avatar }}" alt="{{ player.nickname }}" class="rounded-circle mb-3" width="150" height="450" style="object-fit: cover;" />
+                            <img src="{{ player.avatar }}" alt="{{ player.nickname }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
                             {{ form_start(form, { 'action': path('player_update_avatar', {'id': player.id}), 'method': 'POST', 'attr': {'enctype': 'multipart/form-data'} }) }}
                                 {{ form_row(form.avatar, { 'label': 'Nouvel avatar :' }) }}
                                 <button class="btn btn-primary">Mettre à jour l'avatar</button>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Form\PlayerType;
 use Psr\Log\LoggerInterface;
+use App\Service\ImageResizer;
 use App\Form\PlayerAvatarType;
 use App\Form\SearchPlayerType;
 use App\Security\Voter\PlayerVoter;
@@ -147,6 +148,11 @@ class PlayerController extends AbstractController
     #[Route('/search', name: 'app_player_search', methods: ['GET', 'POST'])]
     public function search(Request $request, PlayerRepository $playerRepository): Response
     {
+        // Vérifiez si l'utilisateur est connecté
+        if (!$this->getUser()) {
+            throw new AccessDeniedException('Vous devez être connecté pour accéder à cette page.');
+        }
+
         $form = $this->createForm(SearchPlayerType::class);
         $form->handleRequest($request);
 
@@ -261,7 +267,7 @@ class PlayerController extends AbstractController
     /**
      * @Route("/{id}/update-avatar", name="player_update_avatar", methods={"POST"})
      */
-    public function updatePlayerAvatar(Player $player, Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+    public function updatePlayerAvatar(Player $player, Request $request, EntityManagerInterface $em, SluggerInterface $slugger, ImageResizer $imageResizer)
     {
         $this->denyAccessUnlessGranted(PlayerVoter::EDIT, $player, 'Vous ne passerez pas !');
 
@@ -284,8 +290,19 @@ class PlayerController extends AbstractController
                 $newFilename
             );
 
+            // Create the resized directory if it doesn't exist
+            $resizedDirectory = $this->getParameter('avatar_pictures_directory') . '/resized';
+            if (!file_exists($resizedDirectory)) {
+                mkdir($resizedDirectory, 0755, true);
+            }
+
+            // Resize the uploaded image
+            $uploadedImagePath = $this->getParameter('avatar_pictures_directory') . '/' . $newFilename;
+            $resizedImagePath = $this->getParameter('avatar_pictures_directory') . '/resized/' . $newFilename;
+            $imageResizer->resize($uploadedImagePath, $resizedImagePath, 200, 200);
+
             $pictureUrl = $request->getUriForPath(
-                $this->getParameter('avatar_pictures_directory_url_path') . $newFilename
+                $this->getParameter('avatar_pictures_directory_url_path') . 'resized/' . $newFilename
             );
 
             $player->setAvatar($pictureUrl);

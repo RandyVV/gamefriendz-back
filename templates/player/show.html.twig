@@ -4,7 +4,7 @@
 
 {% block body %}
     {% include 'header.html.twig' %}
-    <div class="container">
+    <div class="container mt-4">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-lg">
@@ -13,19 +13,19 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4">
-                                <img src="{{ player.avatar }}" class="img-fluid rounded" alt="Player avatar">
+                            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                                <img src="{{ player.avatar }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
                             </div>
                             <div class="col-md-8">
-                                <p class="card-text">Discord Tag: <strong>{{ player.discordTag }}</strong></p>
-                                <p class="card-text">Availability: <strong>{{ player.available ? 'Yes' : 'No' }}</strong></p>
+                                <p class="card-text"><strong>Discord Tag:</strong> {{ player.discordTag }}</p>
+                                <p class="card-text"><strong>Disponible:</strong> {{ player.available ? 'Oui' : 'Non' }}</p>
                                 <h5 class="card-text mt-3">Ses jeux:</h5>
                                 <ul>
                                     {% for game in player.ownedGames %}
                                         <li>{{ game.game.title }} ({{ game.platform.name }})</li>
                                     {% endfor %}
                                 </ul>
-                                <h5 class="card-text mt-3">Ses envies de jouer:</h5>
+                                <h5 class="card-text mt-3">Ses envies:</h5>
                                 <ul>
                                     {% for game in player.wantsToPlay %}
                                         <li>{{ game.game.title }} ({{ game.platform.name }})</li>
