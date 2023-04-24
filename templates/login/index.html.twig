@@ -4,20 +4,88 @@
 {# ... #}
 
 {% block body %}
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+	{% include 'header.html.twig' %}
+	{% if error %}
+		<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+	{% endif %}
 
-    <form action="{{ path('app_login') }}" method="post">
-        <label for="username">Email:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+	<div class="container py-4">
+		<div class="row mt-3 mt-lg-4">
+			<section class="col-12 col-lg-6 mb-5 order-lg-1" method="post" action="#">
+				<h1 class="text-center mb-3">
+					Rejoins la communauté !
+				</h1>
+				<div class="border rounded shadow mx-2 mx-lg-5 p-4 p-lg-5">
+					<form action="{{ path('app_login') }}" method="post">
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password"/>
+						<div class="mb-3">
+							<label for="signin-email" class="form-label">
+								E-mail :
+							</label>
+							<input type="email" id="signin-email" name="_username" value="{{ last_username }}" placeholder="exemple@domaine.com" required>
+						</div>
 
-        {# If you want to control the URL the user is redirected to on success
-        <input type="hidden" name="_target_path" value="/account"/> #}
+						<div class="mb-3">
+							<label for="signin-password" class="form-label">
+								Mot de passe :
+							</label>
+							<input type="password" class="form-control" id="signin-password" name="_password" autocomplete="off" required aria-describedby="signin-password-help">
+							<div class="form-text" id="signin-password-help">
+								<a href="#">
+									Mot de passe oublié
+								</a>
+							</div>
+						</div>
+						<p class="mb-3 text-center">
+							Tu n'as pas encore de compte ?
+							<a href="./signup.html">
+								Inscris-toi !
+							</a>
+						</p>
 
-        <button type="submit">login</button>
-    </form>
-{% endblock %}
+						<div class="d-grid">
+							<button type="reset" class="btn btn-block btn-outline-primary my-1">
+								Réinitialiser
+							</button>
+							<button type="submit" class="btn btn-block btn-primary my-1">
+								Se connecter
+							</button>
+						</div>
+					</form>
+				</div>
+			</section>
+			<section class="col-12 col-lg-6 order-lg-0">
+				<div class="mx-2 mx-lg-0 mt-lg-5">
+					<p class="lead mb-4">
+						Lorem ipsum dolor sit, amet consectetur adipisicing elit. Similique beatae tempora omnis nostrum excepturi sint quis voluptatibus iusto rerum cum, illum vero provident fuga temporibus neque unde est molestiae dolorum.
+					</p>
+					<div class="text-primary">
+						<h2 class="h3">
+							En ce moment on joue à…
+						</h2>
+						<div class="my-4 mb-lg-3 d-lg-flex justify-content-lg-evenly text-center">
+							<ul class="list-unstyled mb-0">
+								<li class="mb-2">Inbred Funk Safari</li>
+								<li class="mb-2">Blazing Bubble 2K</li>
+								<li class="mb-2">Furry Thief Summoner</li>
+								<li class="mb-2">The Simpsons' Sunshine Crusade</li>
+								<li class="mb-2">Go Go Werewolf Fandango</li>
+							</ul>
+							<ul class="list-unstyled">
+								<li class="mb-2">NBA Hockey</li>
+								<li class="mb-2">Dynamite Rugby Plus</li>
+								<li class="mb-2">Amateur Kung-fu Ignition</li>
+								<li class="mb-2">The Muppets Flatulence Smackdown</li>
+								<li class="mb-2">Ingenious Nuclear vs. Street Fighter</li>
+							</ul>
+						</div>
+						<p class="fs-3 fw-bold text-center">
+							Viens t'amuser !
+						</p>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+</main>
+{% include 'footer.html.twig' %}{% endblock %}

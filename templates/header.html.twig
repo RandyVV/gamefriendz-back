@@ -7,7 +7,7 @@
 		<meta name="author" content="">
 		<link rel="icon" href="/favicon.ico">
 		<title>Mon Site</title>
-		<link rel="stylesheet" href="../build/css/main.css">
+		<link rel="stylesheet" href="/build/css/main.css">
 		<script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
 			<nav class="navbar navbar-expand-lg bg-light shadow-sm">
 				<div class="container">
 					<a class="navbar-brand" href="/" title="Revenir à l'accueil">
-						<img class="mx-2" src="../images/gamefriendz.svg" alt="Logo GameFriendZ" height="64">
+						<img class="mx-2" src="/images/gamefriendz.svg" alt="Logo GameFriendZ" height="64">
 					</a>
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-links" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
@@ -35,16 +35,17 @@
 						{% if app.user %}
 							<div class="d-flex align-items-center justify-content-end mb-2 mb-lg-0">
 								<a class="nav-link" href="{{ path('app_player_profile', {'id': app.user.getId()}) }}">
-									<span class="pe-2">Mon profil</span>
-									{# <img class="rounded-circle shadow-sm" src="./images/avatar.png" height="48" alt="Mon image de profil"> #}
+									<span class="ps-2">{{ app.user.nickname }}</span>
+									<img class="rounded-circle shadow-sm" src="{{ app.user.avatar }}" height="48">
 								</a>
 								<a class="btn btn-primary" href="{{ path('app_logout') }}">Déconnexion</a>
 							</div>
 						{% else %}
-							<div class="d-flex align-items-center justify-content-end mb-2 mb-lg-0">
+							<div
+								class="d-flex align-items-center justify-content-end mb-2 mb-lg-0">
 								{# <a href="{{ path('app_register') }}" class="btn btn-outline-primary me-2">
-									S'inscrire
-								</a> #}
+																																	S'inscrire
+																																</a> #}
 								<a href="{{ path('app_login') }}" class="btn btn-primary">
 									Se connecter
 								</a>
