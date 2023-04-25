@@ -24,9 +24,15 @@ class Conversation
      */
     private $participate;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="content")
+     */
+    private $messages;
+
     public function __construct()
     {
         $this->participate = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -54,6 +60,36 @@ class Conversation
     public function removeParticipate(Player $participate): self
     {
         $this->participate->removeElement($participate);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setContent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getContent() === $this) {
+                $message->setContent(null);
+            }
+        }
 
         return $this;
     }
