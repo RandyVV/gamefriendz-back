@@ -13,3 +13,8 @@ login:
 
 app_logout:
     path: /logout
+
+registration:
+    resource: '../src/Controller/RegisterController.php'
+    type: annotation
+

@@ -149,8 +149,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->owned_games = new ArrayCollection();
         $this->wants_to_play = new ArrayCollection();
-        $this->sentMessages = new ArrayCollection();
-        $this->receivedMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
