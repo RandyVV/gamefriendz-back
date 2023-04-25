@@ -98,6 +98,11 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Conversation::class, mappedBy="participate")
+     */
+    private $conversations;
+
+    /**
      * The public representation of the user (e.g. a username, an email address, etc.)
      *
      * @see UserInterface
@@ -139,6 +144,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->owned_games = new ArrayCollection();
         $this->wants_to_play = new ArrayCollection();
+        $this->conversations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -279,6 +285,33 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): self
     {
         $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Conversation>
+     */
+    public function getConversations(): Collection
+    {
+        return $this->conversations;
+    }
+
+    public function addConversation(Conversation $conversation): self
+    {
+        if (!$this->conversations->contains($conversation)) {
+            $this->conversations[] = $conversation;
+            $conversation->addParticipate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversation(Conversation $conversation): self
+    {
+        if ($this->conversations->removeElement($conversation)) {
+            $conversation->removeParticipate($this);
+        }
 
         return $this;
     }
