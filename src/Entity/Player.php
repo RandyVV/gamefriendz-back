@@ -98,16 +98,6 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     private $avatar;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="sender")
-     */
-    private $sentMessages;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="recipient")
-     */
-    private $receivedMessages;
-
-    /**
      * The public representation of the user (e.g. a username, an email address, etc.)
      *
      * @see UserInterface
@@ -293,63 +283,4 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getSentMessages(): Collection
-    {
-        return $this->sentMessages;
-    }
-
-    public function addSentMessage(Message $sentMessage): self
-    {
-        if (!$this->sentMessages->contains($sentMessage)) {
-            $this->sentMessages[] = $sentMessage;
-            $sentMessage->setSender($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSentMessage(Message $sentMessage): self
-    {
-        if ($this->sentMessages->removeElement($sentMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($sentMessage->getSender() === $this) {
-                $sentMessage->setSender(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getReceivedMessages(): Collection
-    {
-        return $this->receivedMessages;
-    }
-
-    public function addReceivedMessage(Message $receivedMessage): self
-    {
-        if (!$this->receivedMessages->contains($receivedMessage)) {
-            $this->receivedMessages[] = $receivedMessage;
-            $receivedMessage->setRecipient($this);
-        }
-
-        return $this;
-    }
-
-    public function removeReceivedMessage(Message $receivedMessage): self
-    {
-        if ($this->receivedMessages->removeElement($receivedMessage)) {
-            // set the owning side to null (unless already changed)
-            if ($receivedMessage->getRecipient() === $this) {
-                $receivedMessage->setRecipient(null);
-            }
-        }
-
-        return $this;
-    }
 }
