@@ -1,61 +1,56 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    
-    <main>
+    <header>
+        <div class="hero hero-bg-light" style="background-image: url(https://picsum.photos/1920);">
+            <div class="hero-content py-5">
+                <div class="container py-lg-5">
+                    <div class="row">
 
-        <header>
-            <div class="hero hero-bg-light" style="background-image: url(https://picsum.photos/1920);">
-                <div class="hero-content py-5">
-                    <div class="container py-lg-5">
-                        <div class="row">
-
-                            <div class="col-12 col-lg text-center text-lg-end order-lg-2 my-lg-4">
-                                <div class="my-lg-5">
-                                    <h1 class="text-primary mt-lg-4 mb-3">
-                                        Bienvenue sur GameFriendZ !
-                                    </h1>
-                                    <p class="lead">
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident hic amet aut earum itaque excepturi nobis, in eos doloribus qui rerum harum molestias officia dolore est obcaecati maxime blanditiis perspiciatis!
-                                    </p>
-                                </div>
+                        <div class="col-12 col-lg text-center text-lg-end order-lg-2 my-lg-4">
+                            <div class="my-lg-5">
+                                <h1 class="text-primary mt-lg-4 mb-3">
+                                    Bienvenue sur GameFriendZ !
+                                </h1>
+                                <p class="lead">
+                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident hic amet aut earum itaque excepturi nobis, in eos doloribus qui rerum harum molestias officia dolore est obcaecati maxime blanditiis perspiciatis!
+                                </p>
                             </div>
-
-                            <div class="col-12 col-lg d-flex order-lg-1 my-4">
-                                <div class="bg-body border rounded shadow mx-auto p-5">
-                                    <h2 class="text-center text-primary mb-3">
-                                        Ici débute ton aventure !
-                                    </h3>
-                                    <form action="#" method="get">
-                                        <div class="mb-3">
-                                            <label for="home-search-type" class="form-label">
-                                                Je recherche :
-                                            </label>
-                                            <select class="form-select" name="type" id="home-search-type">
-                                                <option disabled selected value="">
-                                                    -- Veuillez choisir --
-                                                </option>
-                                                <option value="players">
-                                                    Des joueurs
-                                                </option>
-                                                <option value="games">
-                                                    Des jeux
-                                                </option>
-                                            </select>
-                                        </div>
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-block btn-primary my-1">
-                                                Rechercher
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div> 
                         </div>
+
+                        <div class="col-12 col-lg d-flex order-lg-1 my-4">
+                            <div class="bg-body border rounded shadow mx-auto p-5">
+                                <h2 class="text-center text-primary mb-3">
+                                    Ici débute ton aventure !
+                                </h3>
+                                <form action="#" method="get">
+                                    <div class="mb-3">
+                                        <label for="home-search-type" class="form-label">
+                                            Je recherche :
+                                        </label>
+                                        <select class="form-select" name="type" id="home-search-type">
+                                            <option disabled selected value="">
+                                                -- Veuillez choisir --
+                                            </option>
+                                            <option value="players">
+                                                Des joueurs
+                                            </option>
+                                            <option value="games">
+                                                Des jeux
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" class="btn btn-block btn-primary my-1">
+                                            Rechercher
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div> 
                     </div>
                 </div>
             </div>
-        </header>
-    </main>
-    
+        </div>
+    </header>
 {% endblock %}
