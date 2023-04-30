@@ -11,6 +11,7 @@ use App\Form\SearchPlayerType;
 use App\Security\Voter\PlayerVoter;
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ConversationRepository;
 use App\Repository\GameOnPlatformRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -57,12 +58,16 @@ class PlayerController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_player_show', methods: ['GET'], requirements: ['id' => '\d+'])]
-    public function show(Player $player): Response
+    public function show(Player $player, ConversationRepository $conversationRepository): Response
     {
+        $conversation = $conversationRepository->findByPlayers($this->getUser(), $player);
+
         return $this->render('player/show.html.twig', [
             'player' => $player,
+            'conversation' => $conversation,
         ]);
     }
+
 
     #[Route('/{id}/ownedgames', name: 'app_player_ownedgames', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function addOwnedGame(Player $player, Request $request, GameOnPlatformRepository $gopRepository, EntityManagerInterface $em): Response

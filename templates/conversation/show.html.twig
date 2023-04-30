@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Conversation avec
+    {% for player in other_players %}
+        @{{ player.nickname }}
+        {% if not loop.last %}
+            ,
+        {% endif %}
+    {% endfor %}
+    | GameFriendZ
+{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h1 class="text-end">
+            Conversation avec
+            {% for player in other_players %}
+                @{{ player.nickname }}
+                {% if not loop.last %}
+                    ,
+                {% endif %}
+            {% endfor %}
+        </h1>
+        <div class="row">
+            {# Résumé du profil de l'autre joueur #}
+            <div class="col-lg-4">
+                {% for player in other_players %}
+                    <article class="card shadow">
+                        <header class="card-img-top bg-profile text-center py-4 mb-3">
+                            <img class="img-thumbnail rounded-circle shadow mb-3" src="{{ player.avatar ?? asset('images/avatar.png') }}" width="128" alt="Avatar de {{ player.nickname }}">
+                            <h2 class="">
+                                <a href="{{ path('app_player_show', {id: player.id}) }}" class="">
+                                    @{{ player.nickname }}
+                                </a>
+                            </h2>
+                        </header>
+                        <div class="card-body">
+                            <section class="mb-3">
+                                <h3>
+                                    Infos
+                                </h3>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <span>
+                                            Tag Discord :
+                                        </span>
+                                        <a href="#">
+                                            {{ player.discordTag }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </section>
+                        </div>
+
+
+                    </article>
+                {% endfor %}
+            </div>
+            <div class="col-lg-8">
+                <section>
+                    <div class="bg-light rounded p-2">
+                        {# Messages #}
+                        <section class="p-3">
+                            {% for message in conversation.messages %}
+                                {% set is_author = (message.author.id == app.user.id) %}
+                                <article class="message message-{{ is_author ? 'out' : 'in' }}">
+                                    <div class="message-body">
+                                        <p>
+                                            {{ message.body }}
+                                        </p>
+                                    </div>
+                                    <div class="message-detail">
+                                        <time datetime="{{ message.createdAt | date('z') }}">
+                                            Le {{ message.createdAt | date('d/m/Y') }} à {{ message.createdAt | date('H:i')}}
+                                        </time>
+                                        {% if (is_author and message.status == constant('STATUS_READ', message)) %}
+                                            <span class="message-status" title="Message lu par le destinataire">
+                                                , lu &check;
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </article>
+                            {% endfor %}
+                        </section>
+                        {# Formulaire de réponse #}
+                        <aside class="border rounded mt-2 p-3 bg-body">
+                            {% include 'partials/message/form.html.twig' with {
+                                action: path('conversation_reply', { id: conversation.id })
+                            } %}
+                        </aside>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    {# <h1>Conversation #{{ conversation.id }}</h1>
+
+    <ul>
+        {% for message in conversation.messages %}
+            <li>
+                <strong>{{ message.author.nickname }}:</strong> {{ message.body }}
+                <br>
+                <small>Sent at {{ message.createdAt|date('Y-m-d H:i:s') }}</small>
+            </li>
+        {% else %}
+            <li>No messages found.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>
+        Répondre dans la conversation
+    </h2>
+    {% include 'partials/message/form.html.twig' with {
+        action: path('conversation_reply', { id: conversation.id })
+    } %} #}
+{% endblock %}

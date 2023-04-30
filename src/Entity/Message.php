@@ -10,6 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Message
 {
+    const STATUS_UNREAD = 0;
+    const STATUS_READ = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -30,17 +33,17 @@ class Message
     /**
      * @ORM\Column(type="tinyint")
      */
-    private $see;
+    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="messages")
      */
-    private $send;
+    private $author;
 
     /**
      * @ORM\ManyToOne(targetEntity=Conversation::class, inversedBy="messages")
      */
-    private $content;
+    private $conversation;
 
     public function getId(): ?int
     {
@@ -71,38 +74,38 @@ class Message
         return $this;
     }
 
-    public function getSee()
+    public function getStatus()
     {
-        return $this->see;
+        return $this->status;
     }
 
-    public function setSee($see): self
+    public function setStatus($status): self
     {
-        $this->see = $see;
+        $this->status = $status;
 
         return $this;
     }
 
-    public function getSend(): ?Player
+    public function getAuthor(): ?Player
     {
-        return $this->send;
+        return $this->author;
     }
 
-    public function setSend(?Player $send): self
+    public function setAuthor(?Player $author): self
     {
-        $this->send = $send;
+        $this->author = $author;
 
         return $this;
     }
 
-    public function getContent(): ?Conversation
+    public function getConversation(): ?Conversation
     {
-        return $this->content;
+        return $this->conversation;
     }
 
-    public function setContent(?Conversation $content): self
+    public function setConversation(?Conversation $conversation): self
     {
-        $this->content = $content;
+        $this->conversation = $conversation;
 
         return $this;
     }

@@ -25,7 +25,7 @@ class Conversation
     private $participate;
 
     /**
-     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="content")
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="conversation")
      */
     private $messages;
 
@@ -76,7 +76,7 @@ class Conversation
     {
         if (!$this->messages->contains($message)) {
             $this->messages[] = $message;
-            $message->setContent($this);
+            $message->setConversation($this);
         }
 
         return $this;
@@ -86,8 +86,8 @@ class Conversation
     {
         if ($this->messages->removeElement($message)) {
             // set the owning side to null (unless already changed)
-            if ($message->getContent() === $this) {
-                $message->setContent(null);
+            if ($message->getConversation() === $this) {
+                $message->setConversation(null);
             }
         }
 

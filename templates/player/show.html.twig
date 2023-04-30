@@ -1,41 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Player{% endblock %}
+{% block title %}
+	Player | GameFriendZ
+{% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' %}
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow-lg">
-                    <div class="card-header text-white bg-primary">
-                        <h3 class="mb-0">{{ player.nickname }}</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                <img src="{{ player.avatar }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
-                            </div>
-                            <div class="col-md-8">
-                                <p class="card-text"><strong>Discord Tag:</strong> {{ player.discordTag }}</p>
-                                <p class="card-text"><strong>Disponible:</strong> {{ player.available ? 'Oui' : 'Non' }}</p>
-                                <h5 class="card-text mt-3">Ses jeux:</h5>
-                                <ul>
-                                    {% for game in player.ownedGames %}
-                                        <li>{{ game.game.title }} ({{ game.platform.name }})</li>
-                                    {% endfor %}
-                                </ul>
-                                <h5 class="card-text mt-3">Ses envies:</h5>
-                                <ul>
-                                    {% for game in player.wantsToPlay %}
-                                        <li>{{ game.game.title }} ({{ game.platform.name }})</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="container mt-4">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card shadow-lg">
+					<div class="card-header text-white bg-primary">
+						<h3 class="mb-0">{{ player.nickname }}</h3>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-4 d-flex align-items-center justify-content-center">
+								<img src="{{ player.avatar ?? asset('images/avatar.png') }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
+							</div>
+							<div class="col-md-8">
+								<p class="card-text">
+									<strong>Discord Tag:</strong>
+									{{ player.discordTag }}</p>
+								<p class="card-text">
+									<strong>Disponible:</strong>
+									{{ player.available ? 'Oui' : 'Non' }}</p>
+								<h5 class="card-text mt-3">Ses jeux:</h5>
+								<ul>
+									{% for game in player.ownedGames %}
+										<li>{{ game.game.title }}
+											({{ game.platform.name }})</li>
+									{% endfor %}
+								</ul>
+								<h5 class="card-text mt-3">Ses envies:</h5>
+								<ul>
+									{% for game in player.wantsToPlay %}
+										<li>{{ game.game.title }}
+											({{ game.platform.name }})</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						<div class="mt-4">
+							<a href="{{ conversation ? path('conversation_show', {id: conversation.id}) : path('send_message', {id: player.id}) }}" class="btn btn-primary">Envoyer un message</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

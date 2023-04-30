@@ -1,98 +1,111 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil de {{ player.nickname }}{% endblock %}
+{% block title %}
+	Profil de {{ player.nickname }} | GameFriendZ
+{% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' %}
-    
-    <div class="container mt-4">
-        <h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">{{ player.nickname }} - Profil</h1>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card mb-4 shadow">
-                    <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
-                        <h3 class="mb-0">Informations</h3>
-                        <a href="{{ path('app_player_edit', {'id': player.id}) }}" class="btn btn-warning btn-sm">Modifier mon profil</a>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-4">
-                            <img src="{{ player.avatar }}" alt="{{ player.nickname }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
-                            {{ form_start(form, { 'action': path('player_update_avatar', {'id': player.id}), 'method': 'POST', 'attr': {'enctype': 'multipart/form-data'} }) }}
-                                {{ form_row(form.avatar, { 'label': 'Nouvel avatar :' }) }}
-                                <button class="btn btn-primary">Mettre à jour l'avatar</button>
-                            {{ form_end(form) }}
-                        </div>
-                        <table class="table table-borderless">
-                            <tr>
-                                <th scope="row" class="text-primary">Pseudo :</th>
-                                <td>{{ player.nickname }}{% if player.isAvailable() %} <span class="badge bg-success">Disponible</span>{% else %} <span class="badge bg-danger">Indisponible</span>{% endif %}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="text-primary">Tag Discord :</th>
-                                <td>{{ player.discordTag }}</td>
-                            </tr
-                            <tr>
-                                <th scope="row" class="text-primary">Disponible :</th>
-                                <td>
-                                    <form method="post" action="{{ path('app_player_available', {'id': player.id}) }}">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="availableSwitch" name="available" {% if player.isAvailable() %}checked{% endif %}>
-                                            <label class="form-check-label" for="availableSwitch">Oui/Non</label>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
-                                    </form>
-                                </td>
-                            </tr>    
-                        </table>
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h3 style="font-size: 1.5rem; font-weight: bold; color: #007bff; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #007bff; display: inline-block; padding-bottom: 5px;">Mes jeux</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% for gameOnPlatform in player.ownedGames %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ gameOnPlatform.game.title }} - {{ gameOnPlatform.platform.name }}
-                                    <div>
-                                        <a href="{{ path('app_game_show', {'id': gameOnPlatform.game.id}) }}" class="btn btn-info btn-sm mr-2">Voir le jeu</a>
-                                        <form method="post" class="m-0">
-                                            <input type="hidden" name="id" value="{{ gameOnPlatform.id }}">
-                                            <button type="submit" class="btn btn-danger btn-sm" formaction="{{ path('app_player_ownedgames_remove', {'id': player.id, 'redirectRoute': 'app_player_profile', 'redirectId': player.id}) }}">
-                                                Retirer
-                                            </button>
-                                        </form>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h3 style="font-size: 1.5rem; font-weight: bold; color: #007bff; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #007bff; display: inline-block; padding-bottom: 5px;">Je veux jouer à</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            {% for gameOnPlatform in player.wantsToPlay %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    {{ gameOnPlatform.game.title }} - {{ gameOnPlatform.platform.name }}
-                                    <div>
-                                        <a href="{{ path('app_game_show', {'id': gameOnPlatform.game.id}) }}" class="btn btn-info btn-sm mr-2">Voir le jeu</a>
-                                        <form method="post" class="m-0">
-                                            <input type="hidden" name="id" value="{{ gameOnPlatform.id }}">
-                                            <button type="submit" class="btn btn-danger btn-sm" formaction="{{ path('app_player_wantstoplay_remove', {'id': player.id, 'redirectRoute': 'app_player_profile', 'redirectId': player.id}) }}">
-                                                Retirer
-                                            </button>
-                                        </form>
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+	
+
+	<div class="container mt-4">
+		<h1 class="display-4 mb-4" style="color: #007bff; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">{{ player.nickname }}
+			- Profil</h1>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="card mb-4 shadow">
+					<div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+						<h3 class="mb-0">Informations</h3>
+						<a href="{{ path('app_player_edit', {'id': player.id}) }}" class="btn btn-warning btn-sm">Modifier mon profil</a>
+						<a href="{{ path('conversations') }}" class="btn btn-primary">Ma messagerie</a>
+					</div>
+
+					<div class="card-body">
+						<div class="text-center mb-4">
+							<img src="{{ player.avatar }}" alt="{{ player.nickname }}" class="img-fluid rounded-circle" alt="Player avatar" style="width: 200px; height: 200px; object-fit: cover; border-radius; box-shadow: 0 0 1em black;">
+							{{ form_start(form, { 'action': path('player_update_avatar', {'id': player.id}), 'method': 'POST', 'attr': {'enctype': 'multipart/form-data'} }) }}
+							{{ form_row(form.avatar, { 'label': 'Nouvel avatar :' }) }}
+							<button class="btn btn-primary">Mettre à jour l'avatar</button>
+							{{ form_end(form) }}
+						</div>
+						<table class="table table-borderless">
+							<tr>
+								<th scope="row" class="text-primary">Pseudo :</th>
+								<td>{{ player.nickname }}
+									{% if player.isAvailable() %}
+										<span class="badge bg-success">Disponible</span>
+									{% else %}
+										<span class="badge bg-danger">Indisponible</span>
+									{% endif %}
+								</td>
+							</tr>
+							<tr>
+								<th scope="row" class="text-primary">Tag Discord :</th>
+								<td>{{ player.discordTag }}</td>
+							</tr>
+						</tr<tr>
+						<th scope="row" class="text-primary">Disponible :</th>
+						<td>
+							<form method="post" action="{{ path('app_player_available', {'id': player.id}) }}">
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" id="availableSwitch" name="available" {% if player.isAvailable() %} checked {% endif %}>
+									<label class="form-check-label" for="availableSwitch">Oui/Non</label>
+								</div>
+								<button type="submit" class="btn btn-primary mt-2">Enregistrer</button>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="card mb-4">
+			<div class="card-header">
+				<h3 style="font-size: 1.5rem; font-weight: bold; color: #007bff; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #007bff; display: inline-block; padding-bottom: 5px;">Mes jeux</h3>
+			</div>
+			<div class="card-body">
+				<ul class="list-group">
+					{% for gameOnPlatform in player.ownedGames %}
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							{{ gameOnPlatform.game.title }}
+							-
+							{{ gameOnPlatform.platform.name }}
+							<div>
+								<a href="{{ path('app_game_show', {'id': gameOnPlatform.game.id}) }}" class="btn btn-info btn-sm mr-2">Voir le jeu</a>
+								<form method="post" class="m-0">
+									<input type="hidden" name="id" value="{{ gameOnPlatform.id }}">
+									<button type="submit" class="btn btn-danger btn-sm" formaction="{{ path('app_player_ownedgames_remove', {'id': player.id, 'redirectRoute': 'app_player_profile', 'redirectId': player.id}) }}">
+										Retirer
+									</button>
+								</form>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		<div class="card mb-4">
+			<div class="card-header">
+				<h3 style="font-size: 1.5rem; font-weight: bold; color: #007bff; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #007bff; display: inline-block; padding-bottom: 5px;">Je veux jouer à</h3>
+			</div>
+			<div class="card-body">
+				<ul class="list-group">
+					{% for gameOnPlatform in player.wantsToPlay %}
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							{{ gameOnPlatform.game.title }}
+							-
+							{{ gameOnPlatform.platform.name }}
+							<div>
+								<a href="{{ path('app_game_show', {'id': gameOnPlatform.game.id}) }}" class="btn btn-info btn-sm mr-2">Voir le jeu</a>
+								<form method="post" class="m-0">
+									<input type="hidden" name="id" value="{{ gameOnPlatform.id }}">
+									<button type="submit" class="btn btn-danger btn-sm" formaction="{{ path('app_player_wantstoplay_remove', {'id': player.id, 'redirectRoute': 'app_player_profile', 'redirectId': player.id}) }}">
+										Retirer
+									</button>
+								</form>
+							</div>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div></div>{% endblock %}
