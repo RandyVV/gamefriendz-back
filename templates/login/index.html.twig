@@ -4,7 +4,7 @@
 {# ... #}
 
 {% block body %}
-	
+
 	{% if error %}
 		<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 	{% endif %}
@@ -38,7 +38,7 @@
 						</div>
 						<p class="mb-3 text-center">
 							Tu n'as pas encore de compte ?
-							<a href="./signup.html">
+							<a href="{{ path('app_register') }}">
 								Inscris-toi !
 							</a>
 						</p>
@@ -87,5 +87,4 @@
 			</section>
 		</div>
 	</div>
-</main>
-{% endblock %}
+</main>{% endblock %}

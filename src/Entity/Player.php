@@ -334,7 +334,7 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->messages->contains($message)) {
             $this->messages[] = $message;
-            $message->setSend($this);
+            $message->setAuthor($this);
         }
 
         return $this;
@@ -344,8 +344,8 @@ class Player implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->messages->removeElement($message)) {
             // set the owning side to null (unless already changed)
-            if ($message->getSend() === $this) {
-                $message->setSend(null);
+            if ($message->getAuthor() === $this) {
+                $message->setAuthor(null);
             }
         }
 
