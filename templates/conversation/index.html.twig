@@ -10,7 +10,12 @@
         {% for conversation in conversations %}
             <li>
                 <a href="{{ path('conversation_show', {'id': conversation.id}) }}">
-                    Conversation #{{ conversation.id }}
+                    Conversation avec
+                    {% for player in conversation.getParticipate() %}
+                        {% if player != app.user %}
+                            {{ player.nickname }}
+                        {% endif %}
+                    {% endfor %}
                 </a>
             </li>
         {% else %}

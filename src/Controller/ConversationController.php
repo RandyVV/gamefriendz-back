@@ -18,13 +18,14 @@ class ConversationController extends AbstractController
     #[Route('/conversations', name: 'conversations', methods: ['GET'])]
     public function index(ConversationRepository $conversationRepository): Response
     {
-        $user = $this->getUser();
-        $conversations = $conversationRepository->findByPlayer($user);
+        $currentPlayer = $this->getUser();
+        $conversations = $conversationRepository->findByPlayer($currentPlayer);
 
         return $this->render('conversation/index.html.twig', [
             'conversations' => $conversations,
         ]);
     }
+
 
     #[Route('/conversation/{id}', name: 'conversation_show', methods: ['GET'])]
     public function show(Conversation $conversation, EntityManagerInterface $em): Response
