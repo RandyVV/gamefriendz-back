@@ -1,0 +1,10 @@
+// ===== EXPORTABLE UTILS
+.bg-profile {
+    background-image:
+        linear-gradient(to top, $light, transparent),
+        url(../../../public/images/profile-card-bg.jpg)
+    ;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    background-size: cover;
+}

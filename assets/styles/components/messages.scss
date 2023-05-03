@@ -1,0 +1,51 @@
+.message {
+    &:not(:last-of-type) {
+        margin-bottom: map-get($map: $spacers, $key: 3);
+    }
+
+    .message-body {
+        max-width: 66.66%;
+        width: fit-content;
+        color: $light;
+        padding: map-get($map: $spacers, $key: 2);
+        border-radius: $border-radius-lg;
+        box-shadow: $box-shadow-sm;
+    }
+
+    .message-detail {
+        margin-top: map-get($map: $spacers, $key: 1);
+        font-size: $small-font-size;
+        color: $text-muted;
+    }
+
+    .message-status {
+        display: none;
+    }
+
+    &:last-of-type .message-status {
+        display: initial;
+    }
+
+    &.message-in {
+        .message-body {
+            background-color: adjust-color(
+                $color: $secondary,
+                $alpha: -0.4
+            );
+        }
+    }
+
+    &.message-out {
+        .message-body {
+            background-color: adjust-color(
+                $color: $info,
+                $alpha: -0.4
+            );
+            margin-left: auto;
+        }
+
+        .message-detail {
+            text-align: end;
+        }
+    }
+}
