@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -174,7 +173,7 @@ class PlayerController extends AbstractController
         return $this->render('player/search_form.html.twig', [
             'searchForm' => $form->createView(),
             'players' => $players,
-            'playerList' => $playerList, // Passez la liste des joueurs à votre template Twig
+            'playerList' => $playerList,
         ]);
     }
 
