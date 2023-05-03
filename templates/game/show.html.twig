@@ -71,6 +71,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const platformSelect = document.querySelector('#gameonplatform');
