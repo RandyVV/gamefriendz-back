@@ -22,3 +22,7 @@ framework:
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+            App\Message\Igdb\ImportPlatformTask: async
+            App\Message\Igdb\ImportGameTask: async
+            App\Message\Igdb\ImportGameOnPlatformTask: async
+            

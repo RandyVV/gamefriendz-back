@@ -62,6 +62,11 @@ class Game
      */
     private $picture;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $igdb_id;
+
     public function __construct()
     {
         $this->releases = new ArrayCollection();
@@ -146,6 +151,18 @@ class Game
     public function setPicture(string $picture): self
     {
         $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getIgdbId(): ?int
+    {
+        return $this->igdb_id;
+    }
+
+    public function setIgdbId(?int $igdb_id): self
+    {
+        $this->igdb_id = $igdb_id;
 
         return $this;
     }

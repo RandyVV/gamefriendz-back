@@ -47,6 +47,11 @@ class Platform
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $igdb_id;
+
     public function __construct()
     {
         $this->supportedGames = new ArrayCollection();
@@ -107,6 +112,18 @@ class Platform
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getIgdbId(): ?int
+    {
+        return $this->igdb_id;
+    }
+
+    public function setIgdbId(?int $igdb_id): self
+    {
+        $this->igdb_id = $igdb_id;
 
         return $this;
     }
