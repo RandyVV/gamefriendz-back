@@ -76,7 +76,7 @@ class IgdbService
         }
     }
 
-    public function getGames(int $limit = 500): array
+    public function getGames(int $limit = 500, int $offset = 0): array
     {
         // si on n'a pas encore de token, on se connecte
         if ($this->twitchToken === null) {
@@ -98,7 +98,8 @@ class IgdbService
                 'summary',
                 'multiplayer_modes',
             ],
-            'limit' => $limit
+            'limit' => $limit,
+            'offset' => $offset,
         ]);
 
         return $games;

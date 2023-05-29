@@ -25,4 +25,5 @@ framework:
             App\Message\Igdb\ImportPlatformTask: async
             App\Message\Igdb\ImportGameTask: async
             App\Message\Igdb\ImportGameOnPlatformTask: async
-            
+            App\Message\RunImportGamesCommand: async
+

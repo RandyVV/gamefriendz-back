@@ -10,6 +10,7 @@ use App\Service\IgdbService;
 use App\Entity\GameOnPlatform;
 use Doctrine\ORM\EntityManager;
 use App\Message\Igdb\ImportGameTask;
+use App\Message\RunImportGamesCommand;
 use App\Repository\PlatformRepository;
 use App\Message\Igdb\ImportPlatformTask;
 use Doctrine\ORM\EntityManagerInterface;
@@ -58,18 +59,31 @@ class ImportGamesCommand extends Command
     {
         $this->setHelp("Lance l'import de jeux vidéo depuis l'API IGDB");
 
-        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, "Nombre maximum de jeux à importer", 500);
+        $this->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, "Nombre maximum de jeux à importer par requête à l'API", 500);
+        $this->addOption('offset', 'o', InputOption::VALUE_OPTIONAL, "Position à partir de laquelle récupérer les jeux", 0);
+
+        $this->addOption('max', 'm', InputOption::VALUE_OPTIONAL, "Nombre maximum de jeux à importer en tout, passer -1 pour tout importer", 1000);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // on va chercher les jeux sur l'api IGDB
         $limit = $input->getOption('limit');
-        $gamesData = $this->igdbService->getGames($limit);
+        $offset = $input->getOption('offset');
+        $quota = $input->getOption('max');
+
+        $gamesData = $this->igdbService->getGames($limit, $offset);
+        $remaining = ($quota < 0 ? INF : $quota);
 
         // créer les entités Game à partir des données récupérées
         foreach ($gamesData as $gameData)
         {
+            // pour chaque jeu traité, on retire 1 au quota
+            $remaining--;
+            if ($remaining < 1) {
+                break;
+            }
+
             // on n'importe pas les jeux qui :
             // - n'ont pas d'image
             // - n'ont pas de date de sortie (impossible de créer les GameOnPlatform)
@@ -129,6 +143,21 @@ class ImportGamesCommand extends Command
                 'picture' => $pictureUrl,
                 'igdb_id' => $gameData->id,
                 'releases' => $gameReleases
+            ]));
+        }
+
+        // on relance la commande de manière asynchrone seulement si :
+        // - on n'a pas atteint le nombre maximum de jeux à importer
+        // - on n'a pas atteint le dernier "paquet" de jeux de l'API
+        if ($remaining > 0 && count($gamesData) == $limit) {
+
+            $this->bus->dispatch(new RunImportGamesCommand([
+                // si le nombre de jeux maximum restant à importer est inférieur à la limite par import, on limite au quota
+                'limit' => ($remaining < $limit ? $remaining : $limit),
+                // on "décale" les résultats pour récupérer les jeux suivants
+                'offset' => $offset + $limit,
+                // on indique combien de jeux il reste à importer au maximum (si c'est limité)
+                'max' => ($quota < 0 ? $quota : $remaining)
             ]));
         }
 
